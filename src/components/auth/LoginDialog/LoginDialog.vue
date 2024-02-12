@@ -59,6 +59,8 @@
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "boot/axios";
+import { useStore } from "vuex";
+const store = useStore();
 
 const props = defineProps(["showLoginDialog", "isLoading"]);
 const emits = defineEmits(["update:showLoginDialog", "update:isLoading"]);
@@ -97,7 +99,7 @@ const onSubmit = () => {
       message: "Enter valid credentials",
     });
   } else {
-    emits("update:isLoading", true);
+    store.dispatch("common/setIsLoading", true);
 
     api
       .post("/login", {
@@ -107,6 +109,9 @@ const onSubmit = () => {
       .then((response) => {
         const { message, data } = response.data;
         const { user, token } = data;
+        store.dispatch("auth/setToken", data.token);
+        store.dispatch("auth/setAuthUser", data.user);
+
         $q.notify({
           icon: "done",
           color: "positive",
@@ -121,6 +126,7 @@ const onSubmit = () => {
         modelValue.value = false;
       })
       .catch((error) => {
+        console.log(error);
         const { message } = error.response.data;
         $q.notify({
           icon: "error",
@@ -129,7 +135,7 @@ const onSubmit = () => {
         });
       })
       .finally(() => {
-        emits("update:isLoading", false);
+        store.dispatch("common/setIsLoading", false);
       });
   }
 };

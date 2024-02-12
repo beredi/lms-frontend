@@ -40,14 +40,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import NavigationMenu from "./nav/NavigationMenu.vue";
 import LoadingSpinner from "../components/common/LoadingSpinner.vue";
 import LoginDialog from "src/components/auth/LoginDialog/LoginDialog.vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+const isLoading = computed(() => store.state.common.isLoading);
 
 const leftDrawerOpen = ref(false);
 const showLoginDialog = ref(false);
-const isLoading = ref(false);
 
 const toggleLoginDialog = () => {
   showLoginDialog.value = !showLoginDialog.value;
