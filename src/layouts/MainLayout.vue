@@ -6,10 +6,23 @@
 
         <q-toolbar-title>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
+            <img
+              src="images/kus-jana-kollara-selenca.png"
+              alt="KUS Jána Kollára"
+            />
           </q-avatar>
-          Title
+          {{ $t("appTitle") }}
         </q-toolbar-title>
+        <q-select
+          v-model="locale"
+          :options="languageOptions"
+          dense
+          outlined
+          emit-value
+          map-options
+          options-dense
+          class="q-mr-md bg-grey-11"
+        />
       </q-toolbar>
     </q-header>
 
@@ -23,19 +36,15 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
+import { languageOptions } from "../i18n/index";
+import { useI18n } from "vue-i18n";
+const { locale } = useI18n({ useScope: "global" });
 
-export default {
-  setup() {
-    const leftDrawerOpen = ref(false);
+const leftDrawerOpen = ref(false);
 
-    return {
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-    };
-  },
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 </script>
