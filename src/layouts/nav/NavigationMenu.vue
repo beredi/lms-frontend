@@ -31,14 +31,21 @@
 <script setup>
 import { publicMenuItems } from "./menu";
 import { useRouter } from "vue-router";
-import { toRef, defineProps } from "vue";
+import { computed } from "vue";
 
 const router = useRouter();
-const props = defineProps({
-  leftDrawerOpen: Boolean,
-});
 
-const drawerOpen = toRef(props, "leftDrawerOpen");
+const props = defineProps(["leftDrawerOpen"]);
+const emits = defineEmits(["update:leftDrawerOpen"]);
+
+const drawerOpen = computed({
+  get() {
+    return props.leftDrawerOpen;
+  },
+  set(value) {
+    emits("update:leftDrawerOpen", value);
+  },
+});
 
 const navigateTo = (route) => {
   router.push(route);
