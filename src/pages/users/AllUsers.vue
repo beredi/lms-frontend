@@ -19,21 +19,46 @@
     <div class="q-pa-md row items-start q-gutter-md">
       <user-cards :users="users"></user-cards>
     </div>
+    <q-separator />
+    <div class="row items-center justify-between">
+      <div class="row items-center">
+        {{ $t("itemsPerPage") }}
+        <q-select
+          outlined
+          v-model="itemsPerPage"
+          :options="itemsPerPageOptions"
+          class="q-ml-sm"
+        />
+      </div>
+      <span class="q-ml-md">
+        {{ $t("showing") }}
+        {{ currentPage * itemsPerPage - itemsPerPage + 1 }} -
+        {{
+          currentPage * itemsPerPage <= totalItems
+            ? currentPage * itemsPerPage
+            : totalItems
+        }}
+        {{ $t("from") }} {{ totalItems }}
+      </span>
+    </div>
     <div class="q-pa-lg flex flex-center" v-if="showPagination">
-      <q-pagination v-model="current" :max="5" input />
+      <q-pagination v-model="currentPage" :max="totalPages" input />
     </div>
   </q-page>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { api } from "src/boot/axios";
 import UserCards from "../../components/users/UserCards.vue";
 
 const store = useStore();
 const users = ref([]);
-const current = ref(1);
+const currentPage = ref(1);
+const totalItems = ref();
+const totalPages = ref();
 const itemsPerPage = ref(10);
+const itemsPerPageOptions = ref([5, 10, 20, 30]);
 
 const search = ref("");
 const showPagination = () => {
@@ -41,11 +66,17 @@ const showPagination = () => {
 };
 const loadUsers = async () => {
   store.dispatch("common/setIsLoading", true);
+  const params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
   api
-    .get(`/users`)
+    .get(`/users?${params}`)
     .then((response) => {
-      const { data: loadedUsers } = response.data.data.users;
+      const {
+        data: loadedUsers,
+        meta: { total, last_page },
+      } = response.data.data;
       users.value = loadedUsers;
+      totalItems.value = total;
+      totalPages.value = last_page;
     })
     .catch((error) => {
       const { status, data } = error.response;
@@ -63,6 +94,10 @@ const loadUsers = async () => {
     });
 };
 onMounted(() => {
+  loadUsers();
+});
+
+watch([currentPage, itemsPerPage], () => {
   loadUsers();
 });
 </script>

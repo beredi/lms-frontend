@@ -4,6 +4,9 @@ export default {
   edit: "Upraviť",
   delete: "Vymazať",
   search: "Hľadaj",
+  showing: "Zobrazuje sa",
+  from: "z",
+  itemsPerPage: "Počet záznamov na stranu",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",

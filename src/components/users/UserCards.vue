@@ -1,6 +1,6 @@
 <template>
   <q-card
-    class="col-md-3 col-xs-12 col-lg-2"
+    class="col-md-3 col-xs-12 col-lg-2 column justify-between"
     v-for="user in users"
     :key="user.id"
   >
@@ -14,9 +14,6 @@
       <p class="q-pa-none q-ma-none text-blue-grey-7">
         <span class="text-bold">Email: </span>
         {{ user.email }}
-      </p>
-      <p v-if="user.phone" class="q-pa-none q-ma-none text-blue-grey-7">
-        <span class="text-bold">{{ $t("phone") }}: </span> {{ user.phone }}
       </p>
     </q-card-section>
     <q-separator />
