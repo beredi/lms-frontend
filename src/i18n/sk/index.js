@@ -3,6 +3,7 @@ export default {
   show: "Zobraziť",
   edit: "Upraviť",
   delete: "Vymazať",
+  search: "Hľadaj",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -23,4 +24,6 @@ export default {
   joined: "Člen od",
   phone: "Telefónne číslo",
   address: "Adresa",
+  addUser: "Vytvoriť používateľa",
+  searchUser: "Vyhľadaj používateľa",
 };

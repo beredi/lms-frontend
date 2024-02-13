@@ -2,9 +2,20 @@
   <q-page class="q-px-md">
     <div class="row q-py-md text-blue-grey-8 items-center justify-between">
       <h5 class="q-py-sm q-ma-none">{{ $t("allUsers") }}</h5>
-      <q-btn color="positive"><q-icon name="add" />Add user</q-btn>
+      <q-btn color="positive"><q-icon name="add" />{{ $t("addUser") }}</q-btn>
     </div>
-
+    <div class="row">
+      <div class="col-xs-12 col-md-6">
+        <q-input bordered v-model="search" :label="$t('searchUser')">
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+          <template v-slot:append>
+            <q-btn class="q-ml-md">{{ $t("search") }}</q-btn></template
+          >
+        </q-input>
+      </div>
+    </div>
     <div class="q-pa-md row items-start q-gutter-md">
       <user-cards :users="users"></user-cards>
     </div>
@@ -24,11 +35,11 @@ const users = ref([]);
 const current = ref(1);
 const itemsPerPage = ref(10);
 
+const search = ref("");
 const showPagination = () => {
   return users.value.length() > itemsPerPage.value;
 };
-
-onMounted(() => {
+const loadUsers = async () => {
   store.dispatch("common/setIsLoading", true);
   api
     .get(`/users`)
@@ -50,6 +61,9 @@ onMounted(() => {
     .finally(() => {
       store.dispatch("common/setIsLoading", false);
     });
+};
+onMounted(() => {
+  loadUsers();
 });
 </script>
 
