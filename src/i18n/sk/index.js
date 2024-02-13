@@ -10,4 +10,13 @@ export default {
   //Menu
   categoriesTitle: "Kategórie",
   allBooks: "Všetky knihy",
+  allUsers: "Používatelia",
+  manageUsers: "Správca používateľov",
+  //User
+  roles: "Roly používateľa",
+  borrowedBooks: "Vypožičané knihy",
+  countBorrowedBooks: "Počet vypožičaných kníh",
+  joined: "Člen od",
+  phone: "Telefónne číslo",
+  address: "Adresa",
 };

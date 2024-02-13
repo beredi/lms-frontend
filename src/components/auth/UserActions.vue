@@ -67,6 +67,7 @@ const onLogout = async () => {
         message: t("goodbye"),
         position: "top",
       });
+      router.push("/");
     })
     .catch((error) => {
       const { message } = error.response.data;

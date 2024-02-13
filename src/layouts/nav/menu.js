@@ -21,6 +21,12 @@ export const publicMenuItems = [
 
 export const userMenuItems = [];
 
-export const employerMenuItems = [];
+export const employerMenuItems = [
+  {
+    label: "allUsers",
+    route: "/users",
+    icon: "people",
+  },
+];
 
 export const adminMenuItems = [];

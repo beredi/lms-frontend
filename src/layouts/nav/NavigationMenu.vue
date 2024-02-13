@@ -8,50 +8,29 @@
   >
     <q-scroll-area class="fit">
       <q-list>
-        <template v-for="(item, index) in publicMenuItems">
-          <q-item
-            v-if="item.route"
-            :key="index"
-            :class="{
-              'active-item': isActiveItem(item.route),
-              'text-primary': !isActiveItem(item.route),
-            }"
-            clickable
-            @click="navigateTo(item.route)"
-          >
-            <q-item-section avatar>
-              <q-icon :name="item.icon" />
-            </q-item-section>
-            <q-item-section>{{ $t(item.label) }}</q-item-section>
-          </q-item>
-
-          <q-item-label
-            v-else-if="item.type === 'heading'"
-            :key="index + 'heading'"
-            class="q-pa-sm"
-          >
-            {{ $t(item.label) }}
+        <menu-items :items="publicMenuItems"></menu-items>
+        <template v-if="canViewEmployerItems">
+          <q-separator spaced />
+          <q-item-label class="q-pa-sm text-blue-grey-8 q-mt-xl">
+            <q-icon name="group" />
+            {{ $t("manageUsers") }}
           </q-item-label>
-          <q-separator
-            v-else-if="item.type === 'separator'"
-            spaced
-            :key="index + 'separator'"
-          />
-        </template>
+          <menu-items :items="employerMenuItems"></menu-items
+        ></template>
       </q-list>
     </q-scroll-area>
   </q-drawer>
 </template>
 
 <script setup>
-import { publicMenuItems } from "./menu";
-import { useRouter } from "vue-router";
+import { publicMenuItems, employerMenuItems } from "./menu";
 import { computed } from "vue";
-
-const router = useRouter();
+import { useStore } from "vuex";
+import MenuItems from "./MenuItems.vue";
 
 const props = defineProps(["leftDrawerOpen"]);
 const emits = defineEmits(["update:leftDrawerOpen"]);
+const store = useStore();
 
 const drawerOpen = computed({
   get() {
@@ -62,18 +41,11 @@ const drawerOpen = computed({
   },
 });
 
-const navigateTo = (route) => {
-  router.push(route);
-};
-
-const isActiveItem = (route) => {
-  return route ? router.currentRoute.value.path === route : false;
-};
+const canViewEmployerItems = computed(() => {
+  const { roles } = store.state.auth.authUser;
+  return (
+    store.state.auth.isAuth &&
+    (roles.includes("admin") || roles.includes("employer"))
+  );
+});
 </script>
-
-<style>
-.active-item {
-  background-color: #1f80e1;
-  color: #ffffff;
-}
-</style>
