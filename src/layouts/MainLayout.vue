@@ -14,12 +14,7 @@
           </q-avatar>
           {{ $t("appTitle") }}
         </q-toolbar-title>
-        <q-btn
-          flat
-          icon="person"
-          :label="$t('login')"
-          @click="toggleLoginDialog"
-        />
+        <user-actions @toggleLoginDialog="toggleLoginDialog"></user-actions>
       </q-toolbar>
     </q-header>
 
@@ -44,6 +39,7 @@ import { ref, computed } from "vue";
 import NavigationMenu from "./nav/NavigationMenu.vue";
 import LoadingSpinner from "../components/common/LoadingSpinner.vue";
 import LoginDialog from "src/components/auth/LoginDialog/LoginDialog.vue";
+import UserActions from "src/components/auth/UserActions.vue";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -71,4 +67,6 @@ const updateLeftDrawerOpen = (value) => {
 const updateIsLoading = (value) => {
   isLoading.value = value;
 };
+
+
 </script>

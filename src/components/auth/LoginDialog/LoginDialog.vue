@@ -60,6 +60,9 @@ import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "boot/axios";
 import { useStore } from "vuex";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 const store = useStore();
 
 const props = defineProps(["showLoginDialog", "isLoading"]);
@@ -109,8 +112,8 @@ const onSubmit = () => {
       .then((response) => {
         const { message, data } = response.data;
         const { user, token } = data;
-        store.dispatch("auth/setToken", data.token);
-        store.dispatch("auth/setAuthUser", data.user);
+        store.dispatch("auth/setToken", token);
+        store.dispatch("auth/setAuthUser", user);
 
         $q.notify({
           icon: "done",
@@ -120,13 +123,12 @@ const onSubmit = () => {
         $q.notify({
           icon: "sentiment_satisfied",
           color: "info",
-          message: "Welcome, " + user.name,
+          message: t("welcome") + " " + user.name,
           position: "top",
         });
         modelValue.value = false;
       })
       .catch((error) => {
-        console.log(error);
         const { message } = error.response.data;
         $q.notify({
           icon: "error",
