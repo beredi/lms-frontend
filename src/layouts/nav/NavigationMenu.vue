@@ -8,21 +8,36 @@
   >
     <q-scroll-area class="fit">
       <q-list>
-        <q-item
-          v-for="(item, index) in publicMenuItems"
-          :key="index"
-          :class="{
-            'active-item': isActiveItem(item?.route),
-            'text-primary': !isActiveItem(item?.route),
-            'cursor-pointer': !!item.route,
-          }"
-          @click="item.route && navigateTo(item.route)"
-        >
-          <q-item-section avatar>
-            <q-icon :name="item.icon" />
-          </q-item-section>
-          <q-item-section>{{ $t(item.label) }}</q-item-section>
-        </q-item>
+        <template v-for="(item, index) in publicMenuItems">
+          <q-item
+            v-if="item.route"
+            :key="index"
+            :class="{
+              'active-item': isActiveItem(item.route),
+              'text-primary': !isActiveItem(item.route),
+            }"
+            clickable
+            @click="navigateTo(item.route)"
+          >
+            <q-item-section avatar>
+              <q-icon :name="item.icon" />
+            </q-item-section>
+            <q-item-section>{{ $t(item.label) }}</q-item-section>
+          </q-item>
+
+          <q-item-label
+            v-else-if="item.type === 'heading'"
+            :key="index + 'heading'"
+            class="q-pa-sm"
+          >
+            {{ $t(item.label) }}
+          </q-item-label>
+          <q-separator
+            v-else-if="item.type === 'separator'"
+            spaced
+            :key="index + 'separator'"
+          />
+        </template>
       </q-list>
     </q-scroll-area>
   </q-drawer>
