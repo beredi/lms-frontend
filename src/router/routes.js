@@ -17,6 +17,7 @@ const routes = [
             next();
           }
         },
+        component: () => import("pages/users/AllUsers.vue"),
         children: [
           {
             path: ":id",

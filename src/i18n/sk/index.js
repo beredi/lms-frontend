@@ -1,4 +1,8 @@
 export default {
+  //Common
+  show: "Zobraziť",
+  edit: "Upraviť",
+  delete: "Vymazať",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",

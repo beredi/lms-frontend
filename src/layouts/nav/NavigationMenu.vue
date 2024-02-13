@@ -45,6 +45,7 @@ const canViewEmployerItems = computed(() => {
   const { roles } = store.state.auth.authUser;
   return (
     store.state.auth.isAuth &&
+    roles &&
     (roles.includes("admin") || roles.includes("employer"))
   );
 });
