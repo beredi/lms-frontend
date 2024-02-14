@@ -53,6 +53,7 @@
             :rules="emailRules"
           />
           <q-input
+            v-if="!props.user"
             ref="passwordRef"
             v-model="password"
             autofocus
@@ -137,6 +138,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import { createNewUser, updateUser } from "./user";
 
 const { t } = useI18n();
 const store = useStore();
@@ -151,7 +153,7 @@ const isAdmin = computed(() => {
   );
 });
 
-const props = defineProps(["showDialog"]);
+const props = defineProps(["showDialog", "user"]);
 const emits = defineEmits(["update:showDialog", "loadData"]);
 
 const modelValue = computed({
@@ -165,16 +167,16 @@ const modelValue = computed({
 
 const options = ref(["admin", "employer", "user"]);
 
-const role = ref("user");
-const name = ref(null);
+const role = ref(props.user?.role || "user");
+const name = ref(props.user?.name || null);
 const nameRef = ref(null);
-const lastname = ref(null);
+const lastname = ref(props.user?.lastname || null);
 const lastnameRef = ref(null);
-const email = ref(null);
+const email = ref(props.user?.email || null);
 const emailRef = ref(null);
-const phone = ref(null);
+const phone = ref(props.user?.phone || null);
 const phoneRef = ref(null);
-const address = ref(null);
+const address = ref(props.user?.address || null);
 const addressRef = ref(null);
 
 const emailRules = [
@@ -209,20 +211,31 @@ const onReset = () => {
 };
 
 const onSubmit = () => {
-  const user = {
-    name: name.value,
-    lastname: lastname.value,
-    email: email.value,
-    password: password.value,
-    password_confirmation: passwordConf.value,
-  };
-  if (phone.value) user["phone"] = phone.value;
-  if (address.value) user["address"] = address.value;
-  if (role.value !== "user") user["roles"] = [role.value];
+  const newUser =
+    props.user && props.user.id
+      ? updateUser(
+          props.user.id,
+          name.value,
+          lastname.value,
+          email.value,
+          phone.value,
+          address.value,
+          role.value,
+        )
+      : createNewUser(
+          name.value,
+          lastname.value,
+          email.value,
+          password.value,
+          passwordConf.value,
+          phone.value,
+          address.value,
+          role.value,
+        );
 
   store.dispatch("common/setIsLoading", true);
   api
-    .post("/users", user)
+    .post("/users", newUser)
     .then((response) => {
       const { message } = response.data;
       modelValue.value = false;
