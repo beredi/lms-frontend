@@ -12,7 +12,11 @@
       @loadData="loadUsers"
     ></search-bar>
     <div class="q-pa-md row items-start q-gutter-md">
-      <user-cards :users="users" @editUserId="getEditUser"></user-cards>
+      <user-cards
+        :users="users"
+        @editUserId="getEditUser"
+        @loadData="loadUsers"
+      ></user-cards>
     </div>
     <q-separator class="q-my-md" />
     <records-footer

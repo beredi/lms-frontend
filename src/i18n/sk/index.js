@@ -9,6 +9,9 @@ export default {
   itemsPerPage: "Počet záznamov na stranu",
   required: "Povinné",
   create: "Vytvoriť",
+  yes: "Áno",
+  no: "Nie",
+  cancel: "Zrušiť",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -39,4 +42,5 @@ export default {
   lastname: "Priezvisko",
   password: "Heslo",
   passwordConfirm: "Potvrdiť heslo",
+  confirmDelete: "Ste si istý, že chcete vymazať používateľa?",
 };

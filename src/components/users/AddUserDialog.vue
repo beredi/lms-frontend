@@ -124,7 +124,7 @@
           <q-btn flat label="Reset" type="reset" color="blue-3" size="lg" />
           <q-btn
             flat
-            :label="$t('create')"
+            :label="props.user ? $t('edit') : $t('create')"
             type="submit"
             color="blue-1"
             size="lg"
@@ -248,6 +248,7 @@ const onSubmit = () => {
           color: "positive",
           message: message,
         });
+        onReset();
         emits("loadData");
       })
       .catch((error) => {
@@ -272,6 +273,7 @@ const onSubmit = () => {
           color: "positive",
           message: message,
         });
+        onReset();
         emits("loadData");
       })
       .catch((error) => {

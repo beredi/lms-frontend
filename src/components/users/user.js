@@ -43,3 +43,36 @@ export const updateUser = (
 
   return patchUser;
 };
+
+export const canEdit = (authUser, user) => {
+  let result = false;
+  if (user.roles.includes("admin")) {
+    result = authUser.roles.includes("admin");
+  } else {
+    result =
+      authUser &&
+      (authUser.roles.includes("admin") ||
+        (authUser.permissions.includes("EDIT_USER") &&
+          !user.roles.includes("employer")) ||
+        user.id === authUser.id);
+  }
+
+  return result;
+};
+
+export const canDelete = (authUser, user) => {
+  let result = false;
+  if (authUser.id !== user.id) {
+    if (user.roles.includes("admin")) {
+      result = authUser.roles.includes("admin");
+    } else {
+      result =
+        authUser &&
+        (authUser.roles.includes("admin") ||
+          (authUser.permissions.includes("DELETE_USER") &&
+            !user.roles.includes("employer")));
+    }
+  }
+
+  return result;
+};
