@@ -1,23 +1,16 @@
 <template>
-  <q-page class="q-px-md">
+  <q-page class="q-px-lg">
     <div class="row q-py-md text-blue-grey-8 items-center justify-between">
       <h5 class="q-py-sm q-ma-none">{{ $t("allUsers") }}</h5>
       <q-btn color="positive" @click="updateShowAddDialog(true)"
         ><q-icon name="add" />{{ $t("addUser") }}</q-btn
       >
     </div>
-    <div class="row">
-      <div class="col-xs-12 col-md-6">
-        <q-input bordered v-model="search" :label="$t('searchUser')">
-          <template v-slot:prepend>
-            <q-icon name="search" />
-          </template>
-          <template v-slot:append>
-            <q-btn class="q-ml-md">{{ $t("search") }}</q-btn></template
-          >
-        </q-input>
-      </div>
-    </div>
+    <search-bar
+      :search="search"
+      @update:search="updateSearch"
+      @loadData="loadUsers"
+    ></search-bar>
     <div class="q-pa-md row items-start q-gutter-md">
       <user-cards :users="users"></user-cards>
     </div>
@@ -50,6 +43,7 @@ import PaginationComponent from "../../components/common/PaginationComponent.vue
 import RecordsFooter from "src/components/common/RecordsFooter.vue";
 import UserCards from "../../components/users/UserCards.vue";
 import AddUserDialog from "src/components/users/AddUserDialog.vue";
+import SearchBar from "src/components/common/SearchBar.vue";
 
 const store = useStore();
 const users = ref([]);
@@ -62,7 +56,8 @@ const showAddDialog = ref(false);
 
 const loadUsers = async () => {
   store.dispatch("common/setIsLoading", true);
-  const params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
+  let params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
+  if (search.value) params += `&search=${search.value}`;
   api
     .get(`/users?${params}`)
     .then((response) => {
@@ -107,5 +102,9 @@ const updateItemsPerPage = (value) => {
 
 const updateShowAddDialog = (value) => {
   showAddDialog.value = value;
+};
+
+const updateSearch = (value) => {
+  search.value = value;
 };
 </script>

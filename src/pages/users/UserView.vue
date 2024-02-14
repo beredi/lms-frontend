@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-px-md">
+  <q-page class="q-px-lg">
     <div class="row text-blue-grey-8 items-center">
       <h5 class="q-py-sm q-ma-none">{{ user.name }} {{ user.lastname }}</h5>
     </div>
