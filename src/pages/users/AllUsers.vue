@@ -139,4 +139,5 @@ const getEditUser = (id) => {
 const closeDialog = () => {
   editUser.value = null;
 };
+
 </script>

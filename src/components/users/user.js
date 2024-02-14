@@ -44,6 +44,13 @@ export const updateUser = (
   return patchUser;
 };
 
+export const changePassword = (password, password_confirmation) => {
+  return {
+    password,
+    password_confirmation,
+  };
+};
+
 export const canEdit = (authUser, user) => {
   let result = false;
   if (user.roles.includes("admin")) {
@@ -75,4 +82,14 @@ export const canDelete = (authUser, user) => {
   }
 
   return result;
+};
+
+export const badgeColor = (roles) => {
+  let color = "primary";
+  if (roles) {
+    if (roles.includes("admin")) color = "negative";
+    if (roles.includes("employer")) color = "warning";
+  }
+
+  return color;
 };

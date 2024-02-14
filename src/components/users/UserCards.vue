@@ -47,38 +47,24 @@
       </q-btn>
     </q-card-actions>
   </q-card>
-  <q-dialog v-model="confirm" @hide="onCloseDialog">
-    <q-card>
-      <q-card-section class="row items-center">
-        <q-avatar icon="delete_forever" color="negative" text-color="white" />
-        <span class="q-ml-sm">{{ $t("confirmDelete") }}</span>
-      </q-card-section>
-
-      <q-card-actions align="right">
-        <q-btn flat :label="$t('cancel')" color="primary" v-close-popup />
-        <q-btn
-          flat
-          :label="$t('yes')"
-          color="negative"
-          @click="deleteUser"
-          v-close-popup
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+  <delete-user-dialog
+    :deleteUserId="deleteUserId"
+    :showDialog="confirm"
+    @closeDialog="onCloseDialog"
+    @update:showDialog="updateShowDialog"
+    @loadData="emits('loadData')"
+  ></delete-user-dialog>
 </template>
 <script setup>
-import { api } from "src/boot/axios";
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { useQuasar } from "quasar";
 import { ref } from "vue";
-import { canDelete, canEdit } from "./user";
+import { canDelete, canEdit, badgeColor } from "./user";
+import DeleteUserDialog from "./DeleteUserDialog.vue";
 
 const { users } = defineProps(["users"]);
 const emits = defineEmits(["editUserId", "loadData"]);
 const store = useStore();
-const $q = useQuasar();
 
 const confirm = ref(false);
 const deleteUserId = ref(null);
@@ -94,42 +80,6 @@ const onCloseDialog = () => {
   deleteUserId.value = null;
 };
 
-const badgeColor = (roles) => {
-  let color = "primary";
-  if (roles) {
-    if (roles.includes("admin")) color = "negative";
-    if (roles.includes("employer")) color = "warning";
-  }
-
-  return color;
-};
-
-const deleteUser = async () => {
-  store.dispatch("common/setIsLoading", true);
-  api
-    .delete(`/users/${deleteUserId.value}`)
-    .then((response) => {
-      const { message } = response.data;
-      $q.notify({
-        icon: "done",
-        color: "positive",
-        message: message,
-      });
-      emits("loadData");
-    })
-    .catch((error) => {
-      const { message } = error.response.data;
-      $q.notify({
-        icon: "error",
-        color: "negative",
-        message: message,
-      });
-    })
-    .finally(() => {
-      store.dispatch("common/setIsLoading", false);
-    });
-};
-
 const check = (action, user) => {
   if (authUser.value && user) {
     switch (action) {
@@ -142,6 +92,10 @@ const check = (action, user) => {
     }
   }
   return false;
+};
+
+const updateShowDialog = (value) => {
+  confirm.value = value;
 };
 </script>
 

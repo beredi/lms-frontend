@@ -43,4 +43,5 @@ export default {
   password: "Heslo",
   passwordConfirm: "Potvrdiť heslo",
   confirmDelete: "Ste si istý, že chcete vymazať používateľa?",
+  changePassword: "Zmena hesla",
 };
