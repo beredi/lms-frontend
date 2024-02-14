@@ -7,6 +7,8 @@ export default {
   showing: "Zobrazuje sa",
   from: "z",
   itemsPerPage: "Počet záznamov na stranu",
+  required: "Povinné",
+  create: "Vytvoriť",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -15,6 +17,9 @@ export default {
   welcome: "Vitajte",
   goodbye: "Dovidenia",
   loginBefore: "Prihláste sa",
+  passwordMatch: "Heslá sa musia zhodovať",
+  min8char: "Min. 8 znakov",
+  invalidEmail: "Neplatná e-mail adresa",
   //Menu
   categoriesTitle: "Kategórie",
   allBooks: "Všetky knihy",
@@ -29,4 +34,8 @@ export default {
   address: "Adresa",
   addUser: "Vytvoriť používateľa",
   searchUser: "Vyhľadaj používateľa",
+  name: "Meno",
+  lastname: "Priezvisko",
+  password: "Heslo",
+  passwordConfirm: "Potvrdiť heslo",
 };

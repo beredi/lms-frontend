@@ -2,7 +2,9 @@
   <q-page class="q-px-md">
     <div class="row q-py-md text-blue-grey-8 items-center justify-between">
       <h5 class="q-py-sm q-ma-none">{{ $t("allUsers") }}</h5>
-      <q-btn color="positive"><q-icon name="add" />{{ $t("addUser") }}</q-btn>
+      <q-btn color="positive" @click="updateShowAddDialog(true)"
+        ><q-icon name="add" />{{ $t("addUser") }}</q-btn
+      >
     </div>
     <div class="row">
       <div class="col-xs-12 col-md-6">
@@ -32,6 +34,12 @@
       :totalPages="totalPages"
       @update:currentPage="updateCurrentPage"
     ></pagination-component>
+
+    <add-user-dialog
+      :showDialog="showAddDialog"
+      @update:showDialog="updateShowAddDialog"
+      @loadData="loadUsers"
+    ></add-user-dialog>
   </q-page>
 </template>
 <script setup>
@@ -41,6 +49,7 @@ import { api } from "src/boot/axios";
 import PaginationComponent from "../../components/common/PaginationComponent.vue";
 import RecordsFooter from "src/components/common/RecordsFooter.vue";
 import UserCards from "../../components/users/UserCards.vue";
+import AddUserDialog from "src/components/users/AddUserDialog.vue";
 
 const store = useStore();
 const users = ref([]);
@@ -48,8 +57,9 @@ const currentPage = ref(1);
 const totalItems = ref();
 const totalPages = ref();
 const itemsPerPage = ref(10);
-
 const search = ref("");
+const showAddDialog = ref(false);
+
 const loadUsers = async () => {
   store.dispatch("common/setIsLoading", true);
   const params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
@@ -94,11 +104,8 @@ const updateCurrentPage = (value) => {
 const updateItemsPerPage = (value) => {
   itemsPerPage.value = value;
 };
-</script>
 
-<style lang="scss" scoped>
-.my-card {
-  width: 100%;
-  max-width: 300px;
-}
-</style>
+const updateShowAddDialog = (value) => {
+  showAddDialog.value = value;
+};
+</script>

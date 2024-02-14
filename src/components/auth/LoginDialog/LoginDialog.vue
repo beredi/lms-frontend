@@ -15,6 +15,7 @@
             color="blue-1"
             label-color="blue-2"
             input-class="text-blue-1"
+            lazy-rules
             :rules="emailRules"
           >
             <template v-slot:prepend>
@@ -30,6 +31,7 @@
             label-color="blue-2"
             input-class="text-blue-1"
             :type="isPwd ? 'password' : 'text'"
+            lazy-rules
             :rules="passwordRules"
           >
             <template v-slot:prepend>

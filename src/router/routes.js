@@ -18,13 +18,11 @@ const routes = [
           }
         },
         component: () => import("pages/users/AllUsers.vue"),
-        children: [
-          {
-            path: ":id",
-            props: true,
-            component: () => import("pages/users/UserView.vue"),
-          },
-        ],
+      },
+      {
+        path: "/user/:id",
+        props: true,
+        component: () => import("pages/users/UserView.vue"),
       },
     ],
   },

@@ -1,6 +1,6 @@
 <template>
   <q-card
-    class="col-md-3 col-xs-12 col-lg-2 column justify-between"
+    class="col-md-3 col-xs-12 col-lg-2 column justify-between card"
     v-for="user in users"
     :key="user.id"
   >
@@ -23,7 +23,7 @@
       </p>
     </q-card-section>
     <q-card-actions align="around">
-      <q-btn flat color="primary">
+      <q-btn flat color="primary" :to="`/user/${user.id}`">
         <q-icon name="visibility" />
         <q-tooltip>{{ $t("show") }}</q-tooltip>
       </q-btn>
@@ -41,3 +41,9 @@
 <script setup>
 const { users } = defineProps(["users"]);
 </script>
+
+<style lang="scss" scoped>
+.card {
+  min-height: 250px;
+}
+</style>

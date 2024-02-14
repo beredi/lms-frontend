@@ -46,7 +46,7 @@ const isAuth = computed(() => store.state.auth.isAuth);
 const authUser = computed(() => store.state.auth.authUser);
 
 const showUserProfile = () => {
-  router.push("/users/" + authUser.value.id);
+  router.push("/user/" + authUser.value.id);
 };
 
 const onLogout = async () => {
