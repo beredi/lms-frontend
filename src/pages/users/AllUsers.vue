@@ -19,37 +19,27 @@
     <div class="q-pa-md row items-start q-gutter-md">
       <user-cards :users="users"></user-cards>
     </div>
-    <q-separator />
-    <div class="row items-center justify-between">
-      <div class="row items-center">
-        {{ $t("itemsPerPage") }}
-        <q-select
-          outlined
-          v-model="itemsPerPage"
-          :options="itemsPerPageOptions"
-          class="q-ml-sm"
-        />
-      </div>
-      <span class="q-ml-md">
-        {{ $t("showing") }}
-        {{ currentPage * itemsPerPage - itemsPerPage + 1 }} -
-        {{
-          currentPage * itemsPerPage <= totalItems
-            ? currentPage * itemsPerPage
-            : totalItems
-        }}
-        {{ $t("from") }} {{ totalItems }}
-      </span>
-    </div>
-    <div class="q-pa-lg flex flex-center" v-if="showPagination">
-      <q-pagination v-model="currentPage" :max="totalPages" input />
-    </div>
+    <q-separator class="q-my-md" />
+    <records-footer
+      :itemsPerPage="itemsPerPage"
+      :currentPage="currentPage"
+      :totalItems="totalItems"
+      @update:itemsPerPage="updateItemsPerPage"
+    ></records-footer>
+    <pagination-component
+      v-if="totalPages"
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      @update:currentPage="updateCurrentPage"
+    ></pagination-component>
   </q-page>
 </template>
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { api } from "src/boot/axios";
+import PaginationComponent from "../../components/common/PaginationComponent.vue";
+import RecordsFooter from "src/components/common/RecordsFooter.vue";
 import UserCards from "../../components/users/UserCards.vue";
 
 const store = useStore();
@@ -58,12 +48,8 @@ const currentPage = ref(1);
 const totalItems = ref();
 const totalPages = ref();
 const itemsPerPage = ref(10);
-const itemsPerPageOptions = ref([5, 10, 20, 30]);
 
 const search = ref("");
-const showPagination = () => {
-  return users.value.length() > itemsPerPage.value;
-};
 const loadUsers = async () => {
   store.dispatch("common/setIsLoading", true);
   const params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
@@ -100,6 +86,14 @@ onMounted(() => {
 watch([currentPage, itemsPerPage], () => {
   loadUsers();
 });
+
+const updateCurrentPage = (value) => {
+  currentPage.value = value;
+};
+
+const updateItemsPerPage = (value) => {
+  itemsPerPage.value = value;
+};
 </script>
 
 <style lang="scss" scoped>
