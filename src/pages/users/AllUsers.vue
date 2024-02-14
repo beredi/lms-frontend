@@ -12,7 +12,7 @@
       @loadData="loadUsers"
     ></search-bar>
     <div class="q-pa-md row items-start q-gutter-md">
-      <user-cards :users="users"></user-cards>
+      <user-cards :users="users" @editUserId="getEditUser"></user-cards>
     </div>
     <q-separator class="q-my-md" />
     <records-footer
@@ -32,6 +32,15 @@
       :showDialog="showAddDialog"
       @update:showDialog="updateShowAddDialog"
       @loadData="loadUsers"
+      @closeDialog="closeDialog"
+    ></add-user-dialog>
+    <add-user-dialog
+      v-if="editUser"
+      :showDialog="showEditDialog"
+      :user="editUser"
+      @update:showDialog="updateShowEditDialog"
+      @loadData="loadUsers"
+      @closeDialog="closeDialog"
     ></add-user-dialog>
   </q-page>
 </template>
@@ -53,6 +62,8 @@ const totalPages = ref();
 const itemsPerPage = ref(10);
 const search = ref("");
 const showAddDialog = ref(false);
+const showEditDialog = ref(false);
+const editUser = ref(null);
 
 const loadUsers = async () => {
   store.dispatch("common/setIsLoading", true);
@@ -104,7 +115,24 @@ const updateShowAddDialog = (value) => {
   showAddDialog.value = value;
 };
 
+const updateShowEditDialog = (value) => {
+  showEditDialog.value = value;
+};
+
 const updateSearch = (value) => {
   search.value = value;
+};
+
+const userForEdit = (id) => {
+  return users.value.find((user) => user.id === id);
+};
+
+const getEditUser = (id) => {
+  editUser.value = userForEdit(id);
+  showEditDialog.value = true;
+};
+
+const closeDialog = () => {
+  editUser.value = null;
 };
 </script>

@@ -1,8 +1,10 @@
 <template>
-  <q-dialog v-model="modelValue">
+  <q-dialog v-model="modelValue" @hide="emits('closeDialog')">
     <q-card style="min-width: 50%" class="bg-primary text-white">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h5">{{ $t("addUser") }}</div>
+        <div class="text-h5">
+          {{ props.user ? $t("editUser") : $t("addUser") }}
+        </div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -75,6 +77,7 @@
             </template>
           </q-input>
           <q-input
+            v-if="!props.user"
             ref="passwordConfRef"
             v-model="passwordConf"
             autofocus
@@ -154,7 +157,7 @@ const isAdmin = computed(() => {
 });
 
 const props = defineProps(["showDialog", "user"]);
-const emits = defineEmits(["update:showDialog", "loadData"]);
+const emits = defineEmits(["update:showDialog", "loadData", "closeDialog"]);
 
 const modelValue = computed({
   get() {
@@ -214,7 +217,7 @@ const onSubmit = () => {
   const newUser =
     props.user && props.user.id
       ? updateUser(
-          props.user.id,
+          props.user,
           name.value,
           lastname.value,
           email.value,
@@ -234,28 +237,54 @@ const onSubmit = () => {
         );
 
   store.dispatch("common/setIsLoading", true);
-  api
-    .post("/users", newUser)
-    .then((response) => {
-      const { message } = response.data;
-      modelValue.value = false;
-      $q.notify({
-        icon: "done",
-        color: "positive",
-        message: message,
+  if (props.user?.id) {
+    api
+      .patch(`/users/${props.user.id}`, newUser)
+      .then((response) => {
+        const { message } = response.data;
+        modelValue.value = false;
+        $q.notify({
+          icon: "done",
+          color: "positive",
+          message: message,
+        });
+        emits("loadData");
+      })
+      .catch((error) => {
+        const { message } = error.response.data;
+        $q.notify({
+          icon: "error",
+          color: "negative",
+          message: message,
+        });
+      })
+      .finally(() => {
+        store.dispatch("common/setIsLoading", false);
       });
-      emits("loadData");
-    })
-    .catch((error) => {
-      const { message } = error.response.data;
-      $q.notify({
-        icon: "error",
-        color: "negative",
-        message: message,
+  } else {
+    api
+      .post("/users", newUser)
+      .then((response) => {
+        const { message } = response.data;
+        modelValue.value = false;
+        $q.notify({
+          icon: "done",
+          color: "positive",
+          message: message,
+        });
+        emits("loadData");
+      })
+      .catch((error) => {
+        const { message } = error.response.data;
+        $q.notify({
+          icon: "error",
+          color: "negative",
+          message: message,
+        });
+      })
+      .finally(() => {
+        store.dispatch("common/setIsLoading", false);
       });
-    })
-    .finally(() => {
-      store.dispatch("common/setIsLoading", false);
-    });
+  }
 };
 </script>

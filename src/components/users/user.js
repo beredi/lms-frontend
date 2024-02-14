@@ -23,30 +23,23 @@ export const createNewUser = (
 };
 
 export const updateUser = (
-  id,
+  user,
   name = null,
   lastname = null,
   email = null,
-  password = null,
-  passwordConf = null,
   phone = null,
   address = null,
   role = null,
 ) => {
-  const user = {
-    id: id,
-  };
+  const patchUser = {};
 
-  if (name) user["name"] = name;
-  if (lastname) user["lastname"] = lastname;
-  if (email) user["email"] = email;
-  if (phone) user["phone"] = phone;
-  if (address) user["address"] = address;
-  if (role !== "user") user["roles"] = [role];
-  if (password) {
-    user["password"] = password;
-    user["password_confirmation"] = passwordConf;
-  }
+  if (name !== user.name) patchUser["name"] = name;
+  if (lastname !== user.lastname) patchUser["lastname"] = lastname;
+  if (email !== user.email) patchUser["email"] = email;
+  if (phone !== user.phone) patchUser["phone"] = phone;
+  if (address !== user.address) patchUser["address"] = address;
+  if (role !== "user" && !user.roles.includes(role))
+    patchUser["roles"] = [role];
 
-  return user;
+  return patchUser;
 };

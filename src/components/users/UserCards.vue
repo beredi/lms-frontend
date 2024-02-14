@@ -27,7 +27,12 @@
         <q-icon name="visibility" />
         <q-tooltip>{{ $t("show") }}</q-tooltip>
       </q-btn>
-      <q-btn flat color="accent" v-if="canEdit(user)">
+      <q-btn
+        flat
+        color="accent"
+        v-if="canEdit(user)"
+        @click="emits('editUserId', user.id)"
+      >
         <q-icon name="edit" />
         <q-tooltip>{{ $t("edit") }}</q-tooltip>
       </q-btn>
@@ -44,6 +49,7 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 
 const { users } = defineProps(["users"]);
+const emits = defineEmits(["editUserId"]);
 const store = useStore();
 
 const authUser = computed(() => store.state.auth.authUser);

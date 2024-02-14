@@ -33,6 +33,7 @@ export default {
   phone: "Telefónne číslo",
   address: "Adresa",
   addUser: "Vytvoriť používateľa",
+  editUser: "Upraviť používateľa",
   searchUser: "Vyhľadaj používateľa",
   name: "Meno",
   lastname: "Priezvisko",
