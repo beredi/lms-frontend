@@ -17,5 +17,8 @@ export default defineComponent({
       api.defaults.headers.common.Authorization = "";
     }
   },
+  created() {
+    this.$store.dispatch("common/getCategories");
+  },
 });
 </script>

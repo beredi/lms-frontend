@@ -16,14 +16,50 @@
       <q-item-section>{{ $t(item.label) }}</q-item-section>
     </q-item>
 
-    <q-item-label
-      v-else-if="item.type === 'heading'"
-      :key="index + 'heading'"
-      class="q-pa-sm text-blue-grey-8"
+    <q-expansion-item
+      v-else-if="item.type === 'expansion'"
+      :key="index + 'expansion'"
+      :class="{
+        'active-item': isActiveItem(item.route),
+        'text-primary': !isActiveItem(item.route),
+      }"
+      default-opened
     >
-      <q-icon :name="item?.icon" />
-      {{ $t(item.label) }}
-    </q-item-label>
+      <template v-slot:header>
+        <q-item-section avatar>
+          <q-avatar
+            :icon="item.icon"
+            color="primary"
+            text-color="white"
+            size="sm"
+          />
+        </q-item-section>
+
+        <q-item-section> {{ $t(item.label) }} </q-item-section>
+      </template>
+      <template v-if="item.children">
+        <q-item
+          v-for="(child, index2) in item.children"
+          :key="index2"
+          :class="{
+            'active-item': isActiveItem(child.route),
+            'text-primary': !isActiveItem(child.route),
+            'q-pl-xl': true,
+          }"
+          clickable
+          @click="navigateTo(child.route)"
+        >
+          <q-item-section avatar v-if="child.icon">
+            <q-icon :name="child.icon" />
+          </q-item-section>
+          <q-item-section v-if="child.type === 'category'">
+            {{ child.label }}
+          </q-item-section>
+          <q-item-section v-else>{{ $t(child.label) }}</q-item-section>
+        </q-item></template
+      >
+    </q-expansion-item>
+
     <q-separator
       v-else-if="item.type === 'separator'"
       spaced

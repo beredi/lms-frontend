@@ -8,7 +8,7 @@
   >
     <q-scroll-area class="fit">
       <q-list>
-        <menu-items :items="publicMenuItems"></menu-items>
+        <menu-items :items="menuItems"></menu-items>
         <template v-if="canViewEmployerItems">
           <q-separator spaced />
           <q-item-label class="q-pa-sm text-blue-grey-8 q-mt-xl">
@@ -31,6 +31,9 @@ import MenuItems from "./MenuItems.vue";
 const props = defineProps(["leftDrawerOpen"]);
 const emits = defineEmits(["update:leftDrawerOpen"]);
 const store = useStore();
+
+const categories = computed(() => store.state.common.categories);
+const menuItems = computed(() => publicMenuItems(categories.value));
 
 const drawerOpen = computed({
   get() {
