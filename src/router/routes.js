@@ -24,6 +24,16 @@ const routes = [
         props: true,
         component: () => import("pages/users/UserView.vue"),
       },
+      {
+        path: "/category/:categoryId",
+        props: true,
+        component: () => import("pages/category/CategoryBooks.vue"),
+      },
+      {
+        path: "/author/:authorId",
+        props: true,
+        component: () => import("pages/author/AuthorBooks.vue"),
+      },
     ],
   },
 

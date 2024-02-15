@@ -1,10 +1,11 @@
 <template>
   <q-page class="q-px-lg">
     <div class="row q-py-md text-blue-grey-8 items-center justify-between">
-      <h5 class="q-py-sm q-ma-none">{{ $t("title") }}</h5>
-      <add-new-button :label="$t('addBook')"></add-new-button>
+      <h5 class="q-py-sm q-ma-none">
+        {{ $t("author") }}:
+        <span class="text-bold">{{ author?.name }}</span>
+      </h5>
     </div>
-
     <book-list
       :books="books"
       :search="search"
@@ -19,17 +20,18 @@
     ></book-list>
   </q-page>
 </template>
-
 <script setup>
-import { onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
+import { onMounted, ref, watch } from "vue";
 import { api } from "src/boot/axios";
-import AddNewButton from "src/components/common/AddNewButton.vue";
-import { useQuasar } from "quasar";
+import { useRoute } from "vue-router";
 import BookList from "src/components/books/BookList.vue";
+import { useQuasar } from "quasar";
 
-const store = useStore();
 const $q = useQuasar();
+const props = defineProps(["authorId"]);
+const books = ref(null);
+const author = ref(null);
 
 const search = ref("");
 const totalItems = ref();
@@ -37,22 +39,23 @@ const totalPages = ref();
 const itemsPerPage = ref(10);
 const currentPage = ref(1);
 
-const books = ref(null);
+const store = useStore();
+const route = useRoute();
 
 const loadData = async () => {
   store.dispatch("common/setIsLoading", true);
   let params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
   if (search.value) params += `&search=${search.value}`;
+
   api
-    .get(`/books?${params}`)
+    .get(`/books/author/${props.authorId}?${params}`)
     .then((response) => {
-      const {
-        data: loadedBooks,
-        meta: { total, last_page },
-      } = response.data.data;
-      books.value = loadedBooks;
-      totalItems.value = total;
-      totalPages.value = last_page;
+      const { books: booksData, author: authorData } = response.data.data;
+
+      books.value = booksData.data;
+      author.value = authorData;
+      totalItems.value = booksData.meta.total;
+      totalPages.value = booksData.meta.last_page;
     })
     .catch((error) => {
       const { status, data } = error.response;
@@ -64,12 +67,18 @@ const loadData = async () => {
         });
         router.push("/");
       }
+      if (status === 404) {
+        $q.notify({
+          icon: "error",
+          color: "negative",
+          message: data.message,
+        });
+      }
     })
     .finally(() => {
       store.dispatch("common/setIsLoading", false);
     });
 };
-
 const updateSearch = (value) => {
   search.value = value;
 };
@@ -85,6 +94,13 @@ const updateCurrentPage = (value) => {
 watch([currentPage, itemsPerPage], () => {
   loadData();
 });
+
+watch(
+  () => route.params.authorId,
+  async (newId) => {
+    loadData();
+  },
+);
 
 onMounted(() => {
   loadData();

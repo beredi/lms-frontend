@@ -13,6 +13,7 @@ export default {
   no: "Nie",
   cancel: "Zrušiť",
   title: "Knižica KUS Jána Kollára",
+  noData: "Žiadne dáta na zobrazenie",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -53,4 +54,5 @@ export default {
   bookYear: "Rok vydania",
   bookPages: "Počet strán",
   bookId: "Číslo knihy",
+  category: "Kategória",
 };

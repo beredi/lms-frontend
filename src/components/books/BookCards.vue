@@ -1,5 +1,5 @@
 <template>
-  <template v-if="props.books">
+  <template v-if="props.books && props.books.length > 0">
     <q-card
       class="col-md-3 col-xs-12 col-lg-2 column justify-between card"
       v-for="book in props.books"
@@ -20,7 +20,7 @@
               class="text-primary"
               v-for="author in book.authors"
               :key="author.id"
-              :to="`/authors/${author.id}`"
+              :to="`/author/${author.id}`"
             >
               {{ author.name }}
             </router-link>
@@ -41,7 +41,7 @@
           class="text-primary"
           v-for="category in book.categories"
           :key="category.id"
-          :to="`/categories/${category.id}`"
+          :to="`/category/${category.id}`"
         >
           <q-badge color="purple text-body2">
             {{ category.name }}
@@ -66,7 +66,7 @@
       </q-card-actions>
     </q-card>
   </template>
-  <div v-else>No books to show</div>
+  <div v-else>{{ $t("noData") }}</div>
 </template>
 <script setup>
 import { RouterLink } from "vue-router";
