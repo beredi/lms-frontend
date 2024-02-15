@@ -2,12 +2,14 @@
   <q-page class="q-px-lg">
     <div class="row q-py-md text-blue-grey-8 items-center justify-between">
       <h5 class="q-py-sm q-ma-none">{{ $t("allUsers") }}</h5>
-      <q-btn color="positive" @click="updateShowAddDialog(true)"
-        ><q-icon name="add" />{{ $t("addUser") }}</q-btn
-      >
+      <add-new-button
+        :label="$t('addUser')"
+        @onClick="updateShowAddDialog(true)"
+      ></add-new-button>
     </div>
     <search-bar
       :search="search"
+      :label="$t('searchUser')"
       @update:search="updateSearch"
       @loadData="loadUsers"
     ></search-bar>
@@ -57,8 +59,12 @@ import RecordsFooter from "src/components/common/RecordsFooter.vue";
 import UserCards from "../../components/users/UserCards.vue";
 import AddUserDialog from "src/components/users/AddUserDialog.vue";
 import SearchBar from "src/components/common/SearchBar.vue";
+import AddNewButton from "src/components/common/AddNewButton.vue";
+import { useQuasar } from "quasar";
 
 const store = useStore();
+const $q = useQuasar();
+
 const users = ref([]);
 const currentPage = ref(1);
 const totalItems = ref();
@@ -139,5 +145,4 @@ const getEditUser = (id) => {
 const closeDialog = () => {
   editUser.value = null;
 };
-
 </script>

@@ -4,7 +4,7 @@
       <q-input
         bordered
         v-model="modelValue"
-        :label="$t('searchUser')"
+        :label="props.label"
         @keyup.enter="emits('loadData')"
       >
         <template v-slot:prepend>
@@ -26,7 +26,7 @@
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps(["search"]);
+const props = defineProps(["search", "label"]);
 const emits = defineEmits(["loadData", "update:search"]);
 
 const modelValue = computed({
