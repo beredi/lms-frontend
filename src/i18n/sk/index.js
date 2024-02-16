@@ -19,6 +19,7 @@ export default {
   employer: "Zamestnaný",
   config: "Nastavenia",
   titleName: "Názov",
+  noResults: "Žiadne data",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -55,6 +56,7 @@ export default {
   changePassword: "Zmena hesla",
   // Books
   addBook: "Pridať knihu",
+  editBook: "Upraviť knihu",
   searchBook: "Vyhľadaj knihu",
   author: "Autor",
   authors: "Autori",
@@ -74,4 +76,5 @@ export default {
   confirmDeleteCategory: "Ste si istý, že chcete vymazať kategóriu",
   searchCategory: "Vyhľadaj kategóriu",
   confirmDeleteBook: "Ste si istý, že chcete vymazať knihu",
+  description: "Popis",
 };

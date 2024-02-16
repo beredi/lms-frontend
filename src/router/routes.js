@@ -25,6 +25,11 @@ const routes = [
         component: () => import("pages/users/UserView.vue"),
       },
       {
+        path: "/book/:id",
+        props: true,
+        component: () => import("pages/books/BookView.vue"),
+      },
+      {
         path: "/categories",
         props: true,
         component: () => import("pages/category/AllCategories.vue"),

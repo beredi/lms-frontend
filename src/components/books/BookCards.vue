@@ -5,12 +5,12 @@
       v-for="book in props.books"
       :key="book.id"
     >
-      <q-card-section class="row items-center justify-between">
-        <div>
+      <q-card-section class="row items-start justify-between bookInfo">
+        <div class="col-xs-9">
           <p class="text-h6 q-my-none text-blue-grey-10">
             <router-link
               class="text-blue-grey-10 no-underline"
-              :to="`/books/${book.id}`"
+              :to="`/book/${book.id}`"
             >
               {{ book.title }}
             </router-link>
@@ -26,12 +26,17 @@
             </router-link>
           </div>
         </div>
-        <router-link :to="`/books/${book.id}`" class="text-white no-underline">
-          <div class="text-h5 bookId">
-            {{ book.book_id }}
-            <q-tooltip>{{ $t("bookId") }}</q-tooltip>
-          </div>
-        </router-link>
+        <div class="col-xs-3">
+          <router-link
+            :to="`/book/${book.id}`"
+            class="text-white no-underline"
+          >
+            <div class="text-h5 bookId">
+              {{ book.book_id }}
+              <q-tooltip>{{ $t("bookId") }}</q-tooltip>
+            </div>
+          </router-link>
+        </div>
       </q-card-section>
       <q-card-section
         class="q-my-none q-pt-none q-gutter-sm"
@@ -51,11 +56,17 @@
       <q-separator />
       <book-info :book="book"></book-info>
       <q-card-actions align="around">
-        <q-btn flat color="primary">
+        <q-btn flat color="primary" size="xl" :to="`/book/${book.id}`">
           <q-icon name="visibility" />
           <q-tooltip>{{ $t("show") }}</q-tooltip>
         </q-btn>
-        <q-btn flat color="accent" v-if="checkPermission('edit')">
+        <q-btn
+          flat
+          color="accent"
+          v-if="checkPermission('edit')"
+          @click="emits('editBookId', book.id)"
+          size="xl"
+        >
           <q-icon name="edit" />
           <q-tooltip>{{ $t("edit") }}</q-tooltip>
         </q-btn>
@@ -64,6 +75,7 @@
           color="negative"
           v-if="checkPermission('delete')"
           @click="updateShowDeleteDialog(true, book)"
+          size="xl"
         >
           <q-icon name="delete_forever" />
           <q-tooltip>{{ $t("delete") }}</q-tooltip>
@@ -90,7 +102,7 @@ import { computed, ref } from "vue";
 import DeleteBookDialog from "./DeleteBookDialog.vue";
 
 const props = defineProps(["books"]);
-const emits = defineEmits(["loadData"]);
+const emits = defineEmits(["editBookId", "loadData"]);
 
 const deleteBook = ref(null);
 const showDeleteDialog = ref(false);
@@ -126,6 +138,11 @@ const onCloseDeleteDialog = () => {
   border-radius: 20%;
   background-color: $primary;
   padding: 10px;
+  text-align: center;
+}
+
+.bookInfo {
+  min-height: 150px;
 }
 
 .no-underline {

@@ -5,6 +5,7 @@
       <add-new-button
         v-if="checkPermission('create')"
         :label="$t('addBook')"
+        @click="updateShowAddDialog(true)"
       ></add-new-button>
     </div>
 
@@ -15,11 +16,27 @@
       :currentPage="currentPage"
       :totalItems="totalItems"
       :totalPages="totalPages"
+      @editBookId="getEditBook"
       @updateSearch="updateSearch"
       @loadData="loadData"
       @update:itemsPerPage="updateItemsPerPage"
       @updateCurrentPage="updateCurrentPage"
     ></book-list>
+    <book-dialog
+      v-if="checkPermission('create')"
+      :showDialog="showAddDialog"
+      @update:showDialog="updateShowAddDialog"
+      @loadData="loadData"
+      @closeDialog="closeDialog"
+    ></book-dialog>
+    <book-dialog
+      v-if="checkPermission('edit') && editBook"
+      :book="editBook"
+      :showDialog="showEditDialog"
+      @update:showDialog="updateShowEditDialog"
+      @loadData="loadData"
+      @closeDialog="closeDialog"
+    ></book-dialog>
   </q-page>
 </template>
 
@@ -32,6 +49,7 @@ import { useQuasar } from "quasar";
 import BookList from "src/components/books/BookList.vue";
 import { check as checkBookPermission } from "src/components/books/book";
 import { computed } from "vue";
+import BookDialog from "src/components/books/BookDialog.vue";
 
 const store = useStore();
 const $q = useQuasar();
@@ -44,6 +62,32 @@ const currentPage = ref(1);
 
 const books = ref(null);
 const authUser = computed(() => store.state.auth.authUser);
+const showAddDialog = ref(false);
+const showEditDialog = ref(false);
+const editBook = ref(null);
+
+const updateShowAddDialog = (value) => {
+  showAddDialog.value = value;
+};
+const updateShowEditDialog = (value, book) => {
+  if (book) {
+    editBook.value = book;
+  }
+  showEditDialog.value = value;
+};
+
+const closeDialog = () => {
+  editBook.value = null;
+};
+
+const bookForEdit = (id) => {
+  return books.value.find((book) => book.id === id);
+};
+
+const getEditBook = (id) => {
+  editBook.value = bookForEdit(id);
+  showEditDialog.value = true;
+};
 
 const loadData = async () => {
   store.dispatch("common/setIsLoading", true);

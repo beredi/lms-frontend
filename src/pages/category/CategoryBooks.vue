@@ -31,6 +31,7 @@
       :currentPage="currentPage"
       :totalItems="totalItems"
       :totalPages="totalPages"
+      @editBookId="getEditBook"
       @updateSearch="updateSearch"
       @loadData="loadData"
       @update:itemsPerPage="updateItemsPerPage"
@@ -54,6 +55,15 @@
       @closeDialog="closeDialog"
       @update:showDialog="updateShowDeleteDialog"
     ></delete-category-dialog>
+
+    <book-dialog
+      v-if="checkForBookPermission('edit') && editBook"
+      :book="editBook"
+      :showDialog="showEditBookDialog"
+      @update:showDialog="updateShowBookEditDialog"
+      @loadData="loadData"
+      @closeDialog="closeEditDialog"
+    ></book-dialog>
   </q-page>
 </template>
 <script setup>
@@ -64,9 +74,11 @@ import { useRoute } from "vue-router";
 import BookList from "src/components/books/BookList.vue";
 import { useQuasar } from "quasar";
 import { check } from "src/components/categories/category";
+import { check as checkBookPermission } from "src/components/books/book";
 import CategoryDialog from "src/components/categories/CategoryDialog.vue";
 import { computed } from "vue";
 import DeleteCategoryDialog from "src/components/categories/DeleteCategoryDialog.vue";
+import BookDialog from "src/components/books/BookDialog.vue";
 
 const $q = useQuasar();
 const props = defineProps(["categoryId"]);
@@ -85,10 +97,39 @@ const route = useRoute();
 const showEditDialog = ref(false);
 const showDeleteDialog = ref(false);
 const authUser = computed(() => store.state.auth.authUser);
+const editBook = ref(null);
+const showEditBookDialog = ref(false);
+
+const updateShowBookEditDialog = (value, book) => {
+  if (book) {
+    editBook.value = book;
+  }
+  showEditBookDialog.value = value;
+};
+
+const closeEditDialog = () => {
+  editBook.value = null;
+};
+
+const bookForEdit = (id) => {
+  return books.value.find((book) => book.id === id);
+};
+
+const getEditBook = (id) => {
+  editBook.value = bookForEdit(id);
+  showEditBookDialog.value = true;
+};
 
 const checkPermission = (action) => {
   if (authUser.value && Object.keys(authUser.value).length > 0) {
     return check(action, authUser.value);
+  }
+  return false;
+};
+
+const checkForBookPermission = (action) => {
+  if (authUser.value && Object.keys(authUser.value).length > 0) {
+    return checkBookPermission(action, authUser.value);
   }
   return false;
 };

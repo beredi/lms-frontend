@@ -6,7 +6,11 @@
     @loadData="emits('loadData')"
   ></search-bar>
   <div class="q-pa-md row items-start q-gutter-md">
-    <book-cards :books="books" @loadData="emits('loadData')"></book-cards>
+    <book-cards
+      :books="books"
+      @editBookId="updateEditBookId"
+      @loadData="emits('loadData')"
+    ></book-cards>
   </div>
   <q-separator class="q-my-md" />
   <records-footer
@@ -42,6 +46,7 @@ const emits = defineEmits([
   "update:itemsPerPage",
   "updateCurrentPage",
   "updateSearch",
+  "editBookId",
 ]);
 
 const updateItemsPerPage = (value) => {
@@ -54,5 +59,9 @@ const updatePagination = (value) => {
 
 const updateSearch = (value) => {
   emits("updateSearch", value);
+};
+
+const updateEditBookId = (value) => {
+  emits("editBookId", value);
 };
 </script>

@@ -13,11 +13,20 @@
       :currentPage="currentPage"
       :totalItems="totalItems"
       :totalPages="totalPages"
+      @editBookId="getEditBook"
       @updateSearch="updateSearch"
       @loadData="loadData"
       @update:itemsPerPage="updateItemsPerPage"
       @updateCurrentPage="updateCurrentPage"
     ></book-list>
+    <book-dialog
+      v-if="checkForBookPermission('edit') && editBook"
+      :book="editBook"
+      :showDialog="showEditBookDialog"
+      @update:showDialog="updateShowBookEditDialog"
+      @loadData="loadData"
+      @closeDialog="closeEditDialog"
+    ></book-dialog>
   </q-page>
 </template>
 <script setup>
@@ -27,6 +36,9 @@ import { api } from "src/boot/axios";
 import { useRoute } from "vue-router";
 import BookList from "src/components/books/BookList.vue";
 import { useQuasar } from "quasar";
+import BookDialog from "src/components/books/BookDialog.vue";
+import { check as checkBookPermission } from "src/components/books/book";
+import { computed } from "vue";
 
 const $q = useQuasar();
 const props = defineProps(["authorId"]);
@@ -41,6 +53,38 @@ const currentPage = ref(1);
 
 const store = useStore();
 const route = useRoute();
+
+const editBook = ref(null);
+const showEditBookDialog = ref(false);
+
+const authUser = computed(() => store.state.auth.authUser);
+
+const updateShowBookEditDialog = (value, book) => {
+  if (book) {
+    editBook.value = book;
+  }
+  showEditBookDialog.value = value;
+};
+
+const closeEditDialog = () => {
+  editBook.value = null;
+};
+
+const bookForEdit = (id) => {
+  return books.value.find((book) => book.id === id);
+};
+
+const getEditBook = (id) => {
+  editBook.value = bookForEdit(id);
+  showEditBookDialog.value = true;
+};
+
+const checkForBookPermission = (action) => {
+  if (authUser.value && Object.keys(authUser.value).length > 0) {
+    return checkBookPermission(action, authUser.value);
+  }
+  return false;
+};
 
 const loadData = async () => {
   store.dispatch("common/setIsLoading", true);

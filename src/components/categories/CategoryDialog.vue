@@ -66,7 +66,7 @@ const modelValue = computed({
 const name = ref(props.category?.name || null);
 const nameRef = ref(null);
 
-const requiredRules = [(val) => (val && val.length > "") || t("required")];
+const requiredRules = [(val) => (val && val.length > 0) || t("required")];
 
 const onReset = () => {
   name.value = null;

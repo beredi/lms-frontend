@@ -187,7 +187,7 @@ const emailRules = [
   (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || t("invalidEmail"),
 ];
 
-const requiredRules = [(val) => (val && val.length > "") || t("required")];
+const requiredRules = [(val) => (val && val.length > 0) || t("required")];
 
 const isPwd = ref(true);
 const password = ref(null);

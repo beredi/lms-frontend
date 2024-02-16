@@ -1,7 +1,7 @@
 <template>
   <template v-if="props.authors && props.authors.length > 0">
     <q-card
-      class="col-md-3 col-xs-12 col-lg-2 column justify-between card"
+      class="col-lg-3 col-md-3 col-xs-12 column justify-between card"
       v-for="author in props.authors"
       :key="author.id"
     >
