@@ -5,18 +5,11 @@
     side="left"
     elevated
     :overlay="false"
+    :width="250"
   >
     <q-scroll-area class="fit">
       <q-list>
         <menu-items :items="menuItems"></menu-items>
-        <template v-if="canViewEmployerItems">
-          <q-separator spaced />
-          <q-item-label class="q-pa-sm text-blue-grey-8 q-mt-xl">
-            <q-icon name="group" />
-            {{ $t("manageUsers") }}
-          </q-item-label>
-          <menu-items :items="employerMenuItems"></menu-items
-        ></template>
       </q-list>
     </q-scroll-area>
   </q-drawer>
@@ -42,14 +35,5 @@ const drawerOpen = computed({
   set(value) {
     emits("update:leftDrawerOpen", value);
   },
-});
-
-const canViewEmployerItems = computed(() => {
-  const { roles } = store.state.auth.authUser;
-  return (
-    store.state.auth.isAuth &&
-    roles &&
-    (roles.includes("admin") || roles.includes("employer"))
-  );
 });
 </script>

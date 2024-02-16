@@ -14,7 +14,10 @@
           </q-avatar>
           {{ $t("appTitle") }}
         </q-toolbar-title>
-        <user-actions @toggleLoginDialog="toggleLoginDialog"></user-actions>
+        <user-actions
+          @toggleLoginDialog="toggleLoginDialog"
+          @toggleUserPanel="toggleUserPanel"
+        ></user-actions>
       </q-toolbar>
     </q-header>
 
@@ -22,6 +25,11 @@
       :leftDrawerOpen="leftDrawerOpen"
       @update:leftDrawerOpen="updateLeftDrawerOpen"
     ></navigation-menu>
+    <user-panel
+      v-if="isAuth"
+      :isOpen="userDrawerOpen"
+      @update:isOpen="updateUserDrawerOpen"
+    ></user-panel>
     <login-dialog
       :showLoginDialog="showLoginDialog"
       :isLoading="isLoading"
@@ -41,15 +49,21 @@ import LoadingSpinner from "../components/common/LoadingSpinner.vue";
 import LoginDialog from "src/components/auth/LoginDialog/LoginDialog.vue";
 import UserActions from "src/components/auth/UserActions.vue";
 import { useStore } from "vuex";
+import UserPanel from "src/components/users/UserPanel.vue";
 
 const store = useStore();
 const isLoading = computed(() => store.state.common.isLoading);
-
+const isAuth = computed(() => store.state.auth.isAuth);
 const leftDrawerOpen = ref(false);
+const userDrawerOpen = ref(false);
 const showLoginDialog = ref(false);
 
 const toggleLoginDialog = () => {
   showLoginDialog.value = !showLoginDialog.value;
+};
+
+const toggleUserPanel = () => {
+  userDrawerOpen.value = !userDrawerOpen.value;
 };
 
 const toggleLeftDrawer = () => {
@@ -64,9 +78,11 @@ const updateLeftDrawerOpen = (value) => {
   leftDrawerOpen.value = value;
 };
 
+const updateUserDrawerOpen = (value) => {
+  userDrawerOpen.value = value;
+};
+
 const updateIsLoading = (value) => {
   isLoading.value = value;
 };
-
-
 </script>

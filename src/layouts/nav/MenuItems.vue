@@ -1,11 +1,12 @@
 <template>
-  <template v-for="(item, index) in items">
+  <template v-for="(item, index) in props.items">
     <q-item
       v-if="item.route"
       :key="index"
       :class="{
         'active-item': isActiveItem(item.route),
-        'text-primary': !isActiveItem(item.route),
+        'text-primary': !props.isDark && !isActiveItem(item.route),
+        'text-white': props.isDark && !isActiveItem(item.route),
       }"
       clickable
       @click="navigateTo(item.route)"
@@ -45,12 +46,13 @@
             'active-item': isActiveItem(child.route),
             'text-primary': !isActiveItem(child.route),
             'q-pl-xl': true,
+            'q-pr-none': true,
           }"
           clickable
           @click="navigateTo(child.route)"
         >
-          <q-item-section avatar v-if="child.icon">
-            <q-icon :name="child.icon" />
+          <q-item-section avatar v-if="child.icon" class="q-ma-none avatar">
+            <q-icon :name="child.icon" size="sm" />
           </q-item-section>
           <q-item-section v-if="child.type === 'category'">
             {{ child.label }}
@@ -70,7 +72,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 
-const { items } = defineProps(["items"]);
+const props = defineProps(["items", "isDark"]);
 const router = useRouter();
 
 const navigateTo = (route) => {
@@ -85,5 +87,9 @@ const isActiveItem = (route) => {
 .active-item {
   background-color: #1f80e1;
   color: #ffffff;
+}
+
+.avatar {
+  min-width: 30px !important;
 }
 </style>
