@@ -55,11 +55,16 @@
           <q-icon name="visibility" />
           <q-tooltip>{{ $t("show") }}</q-tooltip>
         </q-btn>
-        <q-btn flat color="accent">
+        <q-btn flat color="accent" v-if="checkPermission('edit')">
           <q-icon name="edit" />
           <q-tooltip>{{ $t("edit") }}</q-tooltip>
         </q-btn>
-        <q-btn flat color="negative">
+        <q-btn
+          flat
+          color="negative"
+          v-if="checkPermission('delete')"
+          @click="updateShowDeleteDialog(true, book)"
+        >
           <q-icon name="delete_forever" />
           <q-tooltip>{{ $t("delete") }}</q-tooltip>
         </q-btn>
@@ -67,12 +72,48 @@
     </q-card>
   </template>
   <div v-else>{{ $t("noData") }}</div>
+  <delete-book-dialog
+    v-if="checkPermission('delete')"
+    :deleteBook="deleteBook"
+    :showDialog="showDeleteDialog"
+    @closeDialog="onCloseDeleteDialog"
+    @update:showDialog="updateShowDeleteDialog"
+    @loadData="emits('loadData')"
+  ></delete-book-dialog>
 </template>
 <script setup>
 import { RouterLink } from "vue-router";
 import BookInfo from "./BookInfo.vue";
+import { check } from "./book";
+import { useStore } from "vuex";
+import { computed, ref } from "vue";
+import DeleteBookDialog from "./DeleteBookDialog.vue";
 
 const props = defineProps(["books"]);
+const emits = defineEmits(["loadData"]);
+
+const deleteBook = ref(null);
+const showDeleteDialog = ref(false);
+
+const store = useStore();
+
+const authUser = computed(() => store.state.auth.authUser);
+
+const checkPermission = (action) => {
+  if (authUser.value && Object.keys(authUser.value).length > 0) {
+    return check(action, authUser.value);
+  }
+  return false;
+};
+const updateShowDeleteDialog = (value, book = null) => {
+  if (book) {
+    deleteBook.value = book;
+  }
+  showDeleteDialog.value = value;
+};
+const onCloseDeleteDialog = () => {
+  deleteBook.value = null;
+};
 </script>
 
 <style lang="scss" scoped>

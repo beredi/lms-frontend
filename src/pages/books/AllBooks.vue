@@ -2,7 +2,10 @@
   <q-page class="q-px-lg">
     <div class="row q-py-md text-blue-grey-8 items-center justify-between">
       <h5 class="q-py-sm q-ma-none">{{ $t("title") }}</h5>
-      <add-new-button :label="$t('addBook')"></add-new-button>
+      <add-new-button
+        v-if="checkPermission('create')"
+        :label="$t('addBook')"
+      ></add-new-button>
     </div>
 
     <book-list
@@ -27,6 +30,8 @@ import { api } from "src/boot/axios";
 import AddNewButton from "src/components/common/AddNewButton.vue";
 import { useQuasar } from "quasar";
 import BookList from "src/components/books/BookList.vue";
+import { check as checkBookPermission } from "src/components/books/book";
+import { computed } from "vue";
 
 const store = useStore();
 const $q = useQuasar();
@@ -38,6 +43,7 @@ const itemsPerPage = ref(10);
 const currentPage = ref(1);
 
 const books = ref(null);
+const authUser = computed(() => store.state.auth.authUser);
 
 const loadData = async () => {
   store.dispatch("common/setIsLoading", true);
@@ -80,6 +86,13 @@ const updateItemsPerPage = (value) => {
 
 const updateCurrentPage = (value) => {
   currentPage.value = value;
+};
+
+const checkPermission = (action) => {
+  if (authUser.value && Object.keys(authUser.value).length > 0) {
+    return checkBookPermission(action, authUser.value);
+  }
+  return false;
 };
 
 watch([currentPage, itemsPerPage], () => {

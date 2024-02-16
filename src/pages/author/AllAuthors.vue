@@ -71,12 +71,7 @@ const updateShowEditDialog = (value) => {
 };
 
 const closeDialog = () => {
-  if (showAddDialog.value) {
-    showAddDialog.value = false;
-  }
-  if (showEditDialog.value) {
-    showEditDialog.value = false;
-  }
+  editAuthor.value = null;
 };
 
 const authorForEdit = (id) => {
@@ -90,6 +85,9 @@ const getEditAuthor = (id) => {
 
 const loadData = async () => {
   store.dispatch("common/setIsLoading", true);
+  if (editAuthor.value) {
+    editAuthor.value = null;
+  }
   let params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
   if (search.value) params += `&search=${search.value}`;
   api

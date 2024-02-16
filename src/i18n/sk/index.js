@@ -73,4 +73,5 @@ export default {
   editCategory: "Upraviť kategóriu",
   confirmDeleteCategory: "Ste si istý, že chcete vymazať kategóriu",
   searchCategory: "Vyhľadaj kategóriu",
+  confirmDeleteBook: "Ste si istý, že chcete vymazať knihu",
 };

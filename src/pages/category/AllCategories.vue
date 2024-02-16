@@ -71,12 +71,7 @@ const updateShowEditDialog = (value) => {
 };
 
 const closeDialog = () => {
-  if (showAddDialog.value) {
-    showAddDialog.value = false;
-  }
-  if (showEditDialog.value) {
-    showEditDialog.value = false;
-  }
+  editCategory.value = null;
 };
 
 const categoryForEdit = (id) => {
