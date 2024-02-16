@@ -1,27 +1,27 @@
 <template>
-  <template v-if="props.authors && props.authors.length > 0">
+  <template v-if="props.categories && props.categories.length > 0">
     <q-card
-      class="col-md-3 col-xs-12 col-lg-2 column justify-between card"
-      v-for="author in props.authors"
-      :key="author.id"
+      class="col-md-4 col-xs-12 col-lg-3 column justify-between card"
+      v-for="category in props.categories"
+      :key="category.id"
     >
       <q-card-section>
         <p class="text-h6 q-my-none text-blue-grey-10">
           <router-link
             class="text-blue-grey-10 no-underline"
-            :to="`/author/${author.id}`"
+            :to="`/category/${category.id}`"
           >
-            {{ author.name }}
+            {{ category.name }}
           </router-link>
         </p>
         <p class="text-body2 q-pt-md">
           {{ $t("bookCount") }}:
-          <span class="text-bold">{{ author.books.length }}</span>
+          <span class="text-bold">{{ category.books.length }}</span>
         </p>
       </q-card-section>
       <q-separator />
       <q-card-actions align="around">
-        <q-btn flat color="primary" :to="`/author/${author.id}`">
+        <q-btn flat color="primary" :to="`/category/${category.id}`">
           <q-icon name="visibility" />
           <q-tooltip>{{ $t("show") }}</q-tooltip>
         </q-btn>
@@ -29,7 +29,7 @@
           flat
           color="accent"
           v-if="checkPermission('edit')"
-          @click="emits('editAuthorId', author.id)"
+          @click="emits('editCategoryId', category.id)"
         >
           <q-icon name="edit" />
           <q-tooltip>{{ $t("edit") }}</q-tooltip>
@@ -38,20 +38,20 @@
           flat
           color="negative"
           v-if="checkPermission('delete')"
-          @click="updateShowDeleteDialog(author)"
+          @click="updateShowDeleteDialog(category)"
         >
           <q-icon name="delete_forever" />
           <q-tooltip>{{ $t("delete") }}</q-tooltip>
         </q-btn>
       </q-card-actions>
     </q-card>
-    <delete-author-dialog
-      :deleteAuthor="deleteAuthor"
+    <delete-category-dialog
+      :deleteCategory="deleteCategory"
       :showDialog="showDeleteDialog"
       @closeDialog="onCloseDialog"
       @update:showDialog="updateShowDialog"
       @loadData="emits('loadData')"
-    ></delete-author-dialog>
+    ></delete-category-dialog>
   </template>
   <div v-else>{{ $t("noData") }}</div>
 </template>
@@ -59,24 +59,24 @@
 import { RouterLink } from "vue-router";
 import { useStore } from "vuex";
 import { computed, ref } from "vue";
-import { check } from "./author";
-import DeleteAuthorDialog from "./DeleteAuthorDialog.vue";
+import { check } from "./category";
+import DeleteCategoryDialog from "./DeleteCategoryDialog.vue";
 
-const props = defineProps(["authors"]);
-const emits = defineEmits(["editAuthorId", "loadData"]);
+const props = defineProps(["categories"]);
+const emits = defineEmits(["editCategoryId", "loadData"]);
 
 const store = useStore();
 const authUser = computed(() => store.state.auth.authUser);
-const deleteAuthor = ref(null);
+const deleteCategory = ref(null);
 const showDeleteDialog = ref(false);
 
-const updateShowDeleteDialog = (author) => {
-  deleteAuthor.value = author;
+const updateShowDeleteDialog = (category) => {
+  deleteCategory.value = category;
   showDeleteDialog.value = true;
 };
 
 const onCloseDialog = () => {
-  deleteAuthor.value = null;
+  deleteCategory.value = null;
 };
 const updateShowDialog = (value) => {
   showDeleteDialog.value = value;

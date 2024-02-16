@@ -8,19 +8,22 @@
     :breakpoint="500"
     class="bg-blue-7"
   >
-    <q-scroll-area class="fit">
-      <user-info v-if="authUser" :user="authUser"></user-info>
+    <q-scroll-area class="fit" v-if="authUser">
+      <user-info :user="authUser"></user-info>
+      <q-separator spaced />
+      <menu-items
+        :items="userMenuItems(authUser.id)"
+        :isDark="true"
+      ></menu-items>
       <template v-if="canViewEmployerItems">
         <q-separator spaced />
-        <menu-items
-          :items="employerMenuItems"
-          :isDark="true"
-        ></menu-items></template
-    ></q-scroll-area>
+        <menu-items :items="employerMenuItems" :isDark="true"></menu-items>
+      </template>
+    </q-scroll-area>
   </q-drawer>
 </template>
 <script setup>
-import { employerMenuItems } from "src/layouts/nav/menu";
+import { employerMenuItems, userMenuItems } from "src/layouts/nav/menu";
 import { computed } from "vue";
 import { useStore } from "vuex";
 import MenuItems from "src/layouts/nav/MenuItems.vue";

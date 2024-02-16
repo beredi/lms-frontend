@@ -18,6 +18,7 @@ export default {
   user: "Čitateľ",
   employer: "Zamestnaný",
   config: "Nastavenia",
+  titleName: "Názov",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -34,7 +35,9 @@ export default {
   allBooks: "Všetky knihy",
   allUsers: "Používatelia",
   manageUsers: "Správca používateľov",
+  manageUser: "Správca používateľa",
   //User
+  profile: "Profil",
   roles: "Roly používateľa",
   borrowedBooks: "Vypožičané knihy",
   countBorrowedBooks: "Počet vypožičaných kníh",
@@ -48,7 +51,7 @@ export default {
   lastname: "Priezvisko",
   password: "Heslo",
   passwordConfirm: "Potvrdiť heslo",
-  confirmDeleteUser: "Ste si istý, že chcete vymazať používateľa?",
+  confirmDeleteUser: "Ste si istý, že chcete vymazať používateľa",
   changePassword: "Zmena hesla",
   // Books
   addBook: "Pridať knihu",
@@ -59,10 +62,15 @@ export default {
   bookPages: "Počet strán",
   bookId: "Číslo knihy",
   category: "Kategória",
+  categories: "Kategórie",
   addAuthor: "Pridaj autora",
   editAuthor: "Upraviť autora",
   searchAuthor: "Vyhľadaj autora",
   bookCount: "Počet kníh",
-  confirmDeleteAuthor: "Ste si istý, že chcete vymazať autora?",
+  confirmDeleteAuthor: "Ste si istý, že chcete vymazať autora",
   manageCategories: "Spravovať kategórie",
+  addCategory: "Pridať kategóriu",
+  editCategory: "Upraviť kategóriu",
+  confirmDeleteCategory: "Ste si istý, že chcete vymazať kategóriu",
+  searchCategory: "Vyhľadaj kategóriu",
 };

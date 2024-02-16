@@ -33,7 +33,13 @@ export const publicMenuItems = (categories) => {
   ];
 };
 
-export const userMenuItems = [];
+export const userMenuItems = (id) => [
+  {
+    label: "profile",
+    route: `/user/${id}`,
+    icon: "person",
+  },
+];
 
 export const employerMenuItems = [
   {

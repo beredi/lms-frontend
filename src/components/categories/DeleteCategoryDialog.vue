@@ -4,13 +4,19 @@
       <q-card-section class="row items-center">
         <q-avatar icon="delete_forever" color="negative" text-color="white" />
         <span class="q-ml-sm"
-          >{{ $t("confirmDeleteAuthor") }} {{ props.deleteAuthor.name }}</span
+          >{{ $t("confirmDeleteCategory") }}
+          {{ props.deleteCategory.name }}</span
         >
       </q-card-section>
 
       <q-card-actions align="right">
         <q-btn flat :label="$t('cancel')" color="primary" v-close-popup />
-        <q-btn flat :label="$t('yes')" color="negative" @click="deleteAuthor" />
+        <q-btn
+          flat
+          :label="$t('yes')"
+          color="negative"
+          @click="deleteCategory"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -22,7 +28,7 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-const props = defineProps(["showDialog", "deleteAuthor", "redirect"]);
+const props = defineProps(["showDialog", "deleteCategory", "redirect"]);
 const emits = defineEmits(["closeDialog", "update:showDialog", "loadData"]);
 
 const router = useRouter();
@@ -38,10 +44,10 @@ const modelValue = computed({
   },
 });
 
-const deleteAuthor = async () => {
+const deleteCategory = async () => {
   store.dispatch("common/setIsLoading", true);
   api
-    .delete(`/authors/${props.deleteAuthor.id}`)
+    .delete(`/categories/${props.deleteCategory.id}`)
     .then((response) => {
       const { message } = response.data;
       $q.notify({
@@ -50,11 +56,13 @@ const deleteAuthor = async () => {
         message: message,
       });
       if (props.redirect) {
-        router.push("/authors");
+        router.push("/categories");
       } else {
         emits("loadData");
         emits("update:showDialog", false);
       }
+
+      store.dispatch("common/getCategories");
     })
     .catch((error) => {
       const { message } = error.response.data;

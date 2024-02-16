@@ -25,6 +25,11 @@ const routes = [
         component: () => import("pages/users/UserView.vue"),
       },
       {
+        path: "/categories",
+        props: true,
+        component: () => import("pages/category/AllCategories.vue"),
+      },
+      {
         path: "/category/:categoryId",
         props: true,
         component: () => import("pages/category/CategoryBooks.vue"),
@@ -35,6 +40,11 @@ const routes = [
       },
       {
         path: "/author/:authorId",
+        props: true,
+        component: () => import("pages/author/AuthorBooks.vue"),
+      },
+      {
+        path: "/categories",
         props: true,
         component: () => import("pages/author/AuthorBooks.vue"),
       },

@@ -1,7 +1,7 @@
 <template>
   <template v-if="props.books && props.books.length > 0">
     <q-card
-      class="col-md-3 col-xs-12 col-lg-2 column justify-between card"
+      class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 column justify-between card"
       v-for="book in props.books"
       :key="book.id"
     >
