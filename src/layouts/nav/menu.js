@@ -4,6 +4,7 @@ export const publicMenuItems = (categories) => {
         label: category.name,
         route: `/category/${category.id}`,
         type: "category",
+        icon: "remove",
       }))
     : [];
 
@@ -12,6 +13,12 @@ export const publicMenuItems = (categories) => {
       label: "allBooks",
       icon: "menu_book",
       route: "/",
+      type: "item",
+    },
+    {
+      label: "authors",
+      icon: "edit_note",
+      route: "/authors",
       type: "item",
     },
     {

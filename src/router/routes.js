@@ -30,6 +30,10 @@ const routes = [
         component: () => import("pages/category/CategoryBooks.vue"),
       },
       {
+        path: "/authors",
+        component: () => import("pages/author/AllAuthors.vue"),
+      },
+      {
         path: "/author/:authorId",
         props: true,
         component: () => import("pages/author/AuthorBooks.vue"),

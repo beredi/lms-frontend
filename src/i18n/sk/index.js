@@ -14,6 +14,9 @@ export default {
   cancel: "Zrušiť",
   title: "Knižica KUS Jána Kollára",
   noData: "Žiadne dáta na zobrazenie",
+  admin: "Administrátor",
+  user: "Čitateľ",
+  employer: "Zamestnaný",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -44,7 +47,7 @@ export default {
   lastname: "Priezvisko",
   password: "Heslo",
   passwordConfirm: "Potvrdiť heslo",
-  confirmDelete: "Ste si istý, že chcete vymazať používateľa?",
+  confirmDeleteUser: "Ste si istý, že chcete vymazať používateľa?",
   changePassword: "Zmena hesla",
   // Books
   addBook: "Pridať knihu",
@@ -55,4 +58,9 @@ export default {
   bookPages: "Počet strán",
   bookId: "Číslo knihy",
   category: "Kategória",
+  addAuthor: "Pridaj autora",
+  editAuthor: "Upraviť autora",
+  searchAuthor: "Vyhľadaj autora",
+  bookCount: "Počet kníh",
+  confirmDeleteAuthor: "Ste si istý, že chcete vymazať autora?",
 };

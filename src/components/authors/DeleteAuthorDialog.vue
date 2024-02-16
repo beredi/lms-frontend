@@ -3,15 +3,12 @@
     <q-card>
       <q-card-section class="row items-center">
         <q-avatar icon="delete_forever" color="negative" text-color="white" />
-        <span class="q-ml-sm">
-          {{ $t("confirmDeleteUser") }}: {{ props.deleteUser.name }}
-          {{ props.deleteUser.lastname }}
-        </span>
+        <span class="q-ml-sm">{{ $t("confirmDelete") }}</span>
       </q-card-section>
 
       <q-card-actions align="right">
         <q-btn flat :label="$t('cancel')" color="primary" v-close-popup />
-        <q-btn flat :label="$t('yes')" color="negative" @click="deleteUser" />
+        <q-btn flat :label="$t('yes')" color="negative" @click="deleteAuthor" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -23,7 +20,7 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-const props = defineProps(["showDialog", "deleteUser", "redirect"]);
+const props = defineProps(["showDialog", "deleteAuthorId", "redirect"]);
 const emits = defineEmits(["closeDialog", "update:showDialog", "loadData"]);
 
 const router = useRouter();
@@ -39,10 +36,10 @@ const modelValue = computed({
   },
 });
 
-const deleteUser = async () => {
+const deleteAuthor = async () => {
   store.dispatch("common/setIsLoading", true);
   api
-    .delete(`/users/${props.deleteUser.id}`)
+    .delete(`/authors/${props.deleteAuthorId}`)
     .then((response) => {
       const { message } = response.data;
       $q.notify({

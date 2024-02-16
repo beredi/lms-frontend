@@ -40,7 +40,7 @@
         flat
         color="negative"
         v-if="check('delete', user)"
-        @click="showDeleteDialog(user.id)"
+        @click="updateShowDeleteDialog(user)"
       >
         <q-icon name="delete_forever" />
         <q-tooltip>{{ $t("delete") }}</q-tooltip>
@@ -48,8 +48,8 @@
     </q-card-actions>
   </q-card>
   <delete-user-dialog
-    :deleteUserId="deleteUserId"
-    :showDialog="confirm"
+    :deleteUser="deleteUser"
+    :showDialog="showDeleteDialog"
     @closeDialog="onCloseDialog"
     @update:showDialog="updateShowDialog"
     @loadData="emits('loadData')"
@@ -66,18 +66,18 @@ const { users } = defineProps(["users"]);
 const emits = defineEmits(["editUserId", "loadData"]);
 const store = useStore();
 
-const confirm = ref(false);
-const deleteUserId = ref(null);
+const showDeleteDialog = ref(false);
+const deleteUser = ref(null);
 
 const authUser = computed(() => store.state.auth.authUser);
 
-const showDeleteDialog = (id) => {
-  deleteUserId.value = id;
-  confirm.value = true;
+const updateShowDeleteDialog = (user) => {
+  deleteUser.value = user;
+  showDeleteDialog.value = true;
 };
 
 const onCloseDialog = () => {
-  deleteUserId.value = null;
+  deleteUser.value = null;
 };
 
 const check = (action, user) => {
@@ -95,7 +95,7 @@ const check = (action, user) => {
 };
 
 const updateShowDialog = (value) => {
-  confirm.value = value;
+  showDeleteDialog.value = value;
 };
 </script>
 

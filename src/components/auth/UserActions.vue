@@ -1,29 +1,16 @@
 <template>
-  <q-btn-dropdown
-    color="primary"
-    :label="authUser.name + ' ' + authUser.lastname"
-    v-if="isAuth"
-  >
-    <q-list class="list-item">
-      <q-item clickable v-close-popup @click="showUserProfile">
-        <q-item-section>
-          <q-item-label><q-icon name="person" /> Profil</q-item-label>
-        </q-item-section>
-      </q-item>
-      <q-item clickable v-close-popup @click="onLogout">
-        <q-item-section>
-          <q-item-label><q-icon name="logout" /> Logout</q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
-  </q-btn-dropdown>
-
+  <template v-if="isAuth">
+    <q-btn dense flat @click="emits('toggleUserPanel')">
+      <q-icon name="person" />
+      {{ authUser.name }} {{ authUser.lastname }}
+    </q-btn>
+  </template>
   <q-btn
     v-if="!isAuth"
     flat
     icon="person"
     :label="$t('login')"
-    @click="emit('toggleLoginDialog')"
+    @click="emits('toggleLoginDialog')"
   />
 </template>
 
@@ -38,7 +25,7 @@ import { useRouter } from "vue-router";
 const { t } = useI18n();
 const router = useRouter();
 
-const emit = defineEmits(["toggleLoginDialog"]);
+const emits = defineEmits(["toggleLoginDialog", "toggleUserPanel"]);
 const store = useStore();
 const $q = useQuasar();
 

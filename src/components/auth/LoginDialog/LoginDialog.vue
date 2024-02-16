@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="modelValue" persistent>
+  <q-dialog v-model="modelValue" persistent @hide="reset">
     <q-card style="min-width: 50%" class="bg-primary text-white">
       <q-card-section class="text-center">
         <div class="text-h6">{{ $t("login") }}</div>
@@ -93,6 +93,11 @@ const passwordRules = [
   (val) => (val && val.length > 7) || "Required | Min 8 characters",
 ];
 
+const reset = () => {
+  email.value = null;
+  password.value = null;
+};
+
 const onSubmit = () => {
   emailRef.value.validate();
   passwordRef.value.validate();
@@ -129,6 +134,7 @@ const onSubmit = () => {
           position: "top",
         });
         modelValue.value = false;
+        reset();
       })
       .catch((error) => {
         const { message } = error.response.data;
