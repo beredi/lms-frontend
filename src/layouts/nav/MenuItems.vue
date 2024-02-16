@@ -16,7 +16,14 @@
       </q-item-section>
       <q-item-section>{{ $t(item.label) }}</q-item-section>
     </q-item>
-
+    <q-item-label
+      v-else-if="item.type === 'heading'"
+      :key="index + 'heading'"
+      class="q-py-sm q-px-md text-grey-4"
+    >
+      <q-icon :name="item.icon" class="q-pr-md" />
+      {{ $t(item.label) }}
+    </q-item-label>
     <q-expansion-item
       v-else-if="item.type === 'expansion'"
       :key="index + 'expansion'"

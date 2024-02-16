@@ -12,10 +12,6 @@
       <user-info v-if="authUser" :user="authUser"></user-info>
       <template v-if="canViewEmployerItems">
         <q-separator spaced />
-        <q-item-label class="q-py-none q-px-md text-grey-4 q-mt-xl">
-          <q-icon name="group" class="q-pr-md" />
-          {{ $t("manageUsers") }}
-        </q-item-label>
         <menu-items
           :items="employerMenuItems"
           :isDark="true"

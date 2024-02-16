@@ -17,6 +17,7 @@ export default {
   admin: "Administrátor",
   user: "Čitateľ",
   employer: "Zamestnaný",
+  config: "Nastavenia",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -63,4 +64,5 @@ export default {
   searchAuthor: "Vyhľadaj autora",
   bookCount: "Počet kníh",
   confirmDeleteAuthor: "Ste si istý, že chcete vymazať autora?",
+  manageCategories: "Spravovať kategórie",
 };

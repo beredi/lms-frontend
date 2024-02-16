@@ -37,6 +37,24 @@ export const userMenuItems = [];
 
 export const employerMenuItems = [
   {
+    label: "config",
+    type: "heading",
+    icon: "settings",
+  },
+  {
+    label: "manageCategories",
+    route: "/categories",
+    icon: "style",
+  },
+  {
+    type: "separator",
+  },
+  {
+    label: "manageUsers",
+    type: "heading",
+    icon: "group",
+  },
+  {
     label: "allUsers",
     route: "/users",
     icon: "people",
