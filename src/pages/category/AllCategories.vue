@@ -138,7 +138,7 @@ const checkPermission = (action) => {
   return false;
 };
 
-watch([currentPage, itemsPerPage], () => {
+watch([currentPage, itemsPerPage, authUser.value], () => {
   loadData();
 });
 

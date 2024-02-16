@@ -9,7 +9,21 @@ export const doLogout = async ({ commit }) => {
 export const getAuthUser = async ({ commit, dispatch }, token) => {
   dispatch("common/setIsLoading", true, { root: true });
   api
-    .get("/auth-user", token.access)
+    .get("/auth-user", token)
+    .then((response) => {
+      const { user } = response.data.data;
+      commit("SET_AUTH_USER", user);
+    })
+    .finally(() => {
+      dispatch("common/setIsLoading", false, { root: true });
+    });
+};
+
+export const loadAuthUser = async ({ commit, dispatch }) => {
+  dispatch("common/setIsLoading", true, { root: true });
+  const token = localStorage.getItem("token");
+  api
+    .get("/auth-user", token)
     .then((response) => {
       const { user } = response.data.data;
       commit("SET_AUTH_USER", user);

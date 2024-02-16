@@ -46,6 +46,7 @@
       </q-card-actions>
     </q-card>
     <delete-category-dialog
+      v-if="checkPermission('delete')"
       :deleteCategory="deleteCategory"
       :showDialog="showDeleteDialog"
       @closeDialog="onCloseDialog"

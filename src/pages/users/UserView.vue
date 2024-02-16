@@ -123,7 +123,7 @@
     </div>
     <delete-user-dialog
       v-if="id"
-      :deleteUserId="id"
+      :deleteUser="user"
       :showDialog="confirm"
       :redirect="true"
       @closeDialog="onCloseDialog"

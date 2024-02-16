@@ -250,6 +250,7 @@ const onSubmit = () => {
         });
         onReset();
         emits("loadData");
+        store.dispatch("auth/loadAuthUser");
       })
       .catch((error) => {
         const { message } = error.response.data;

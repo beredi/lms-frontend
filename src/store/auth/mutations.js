@@ -9,6 +9,7 @@ export const SET_TOKEN = (state, token) => {
 
 export const REMOVE_TOKEN = (state) => {
   state.isAuth = false;
+  state.authUser = {};
   state.token = "";
 };
 

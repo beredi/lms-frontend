@@ -5,6 +5,24 @@
         {{ $t("category") }}:
         <span class="text-bold">{{ category?.name }}</span>
       </h5>
+      <div class="q-gutter-sm">
+        <q-btn
+          color="accent"
+          v-if="checkPermission('edit')"
+          @click="updateShowEditDialog(true)"
+        >
+          <q-tooltip>{{ $t("edit") }}</q-tooltip>
+          <q-icon name="edit"
+        /></q-btn>
+        <q-btn
+          color="negative"
+          @click="updateShowDeleteDialog(true)"
+          v-if="checkPermission('delete')"
+        >
+          <q-tooltip>{{ $t("delete") }}</q-tooltip>
+          <q-icon name="delete_forever"
+        /></q-btn>
+      </div>
     </div>
     <book-list
       :books="books"
@@ -18,6 +36,24 @@
       @update:itemsPerPage="updateItemsPerPage"
       @updateCurrentPage="updateCurrentPage"
     ></book-list>
+
+    <category-dialog
+      v-if="checkPermission('edit') && category"
+      :category="category"
+      :showDialog="showEditDialog"
+      @update:showDialog="updateShowEditDialog"
+      @loadData="loadData"
+      @closeDialog="closeDialog"
+    ></category-dialog>
+
+    <delete-category-dialog
+      v-if="checkPermission('delete') && category"
+      :deleteCategory="category"
+      :showDialog="showDeleteDialog"
+      :redirect="true"
+      @closeDialog="closeDialog"
+      @update:showDialog="updateShowDeleteDialog"
+    ></delete-category-dialog>
   </q-page>
 </template>
 <script setup>
@@ -27,6 +63,10 @@ import { api } from "src/boot/axios";
 import { useRoute } from "vue-router";
 import BookList from "src/components/books/BookList.vue";
 import { useQuasar } from "quasar";
+import { check } from "src/components/categories/category";
+import CategoryDialog from "src/components/categories/CategoryDialog.vue";
+import { computed } from "vue";
+import DeleteCategoryDialog from "src/components/categories/DeleteCategoryDialog.vue";
 
 const $q = useQuasar();
 const props = defineProps(["categoryId"]);
@@ -42,8 +82,22 @@ const currentPage = ref(1);
 const store = useStore();
 const route = useRoute();
 
+const showEditDialog = ref(false);
+const showDeleteDialog = ref(false);
+const authUser = computed(() => store.state.auth.authUser);
+
+const checkPermission = (action) => {
+  if (authUser.value && Object.keys(authUser.value).length > 0) {
+    return check(action, authUser.value);
+  }
+  return false;
+};
+
 const loadData = async () => {
   store.dispatch("common/setIsLoading", true);
+  if (category.value) {
+    category.value = null;
+  }
   let params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
   if (search.value) params += `&search=${search.value}`;
 
@@ -91,13 +145,30 @@ const updateCurrentPage = (value) => {
   currentPage.value = value;
 };
 
+const updateShowEditDialog = (value) => {
+  showEditDialog.value = value;
+};
+
+const updateShowDeleteDialog = (value) => {
+  showDeleteDialog.value = value;
+};
+
+const closeDialog = () => {
+  if (showEditDialog.value) {
+    showEditDialog.value = false;
+  }
+  if (showDeleteDialog.value) {
+    showDeleteDialog.value = null;
+  }
+};
+
 watch([currentPage, itemsPerPage], () => {
   loadData();
 });
 
 watch(
   () => route.params.categoryId,
-  async (newId) => {
+  async () => {
     loadData();
   },
 );
