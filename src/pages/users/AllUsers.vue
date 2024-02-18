@@ -7,33 +7,24 @@
         @onClick="updateShowAddDialog(true)"
       ></add-new-button>
     </div>
-    <search-bar
+    <records-list
       :search="search"
-      :label="$t('searchUser')"
-      @update:search="updateSearch"
+      :itemsPerPage="itemsPerPage"
+      :currentPage="currentPage"
+      :totalItems="totalItems"
+      :totalPages="totalPages"
+      :searchLabel="$t('searchUser')"
+      @updateCurrentPage="updateCurrentPage"
+      @updateItemsPerPage="updateItemsPerPage"
+      @updateSearch="updateSearch"
       @loadData="loadUsers"
-    ></search-bar>
-    <div class="q-pa-md row items-start q-gutter-md">
+    >
       <user-cards
         :users="users"
         @editUserId="getEditUser"
         @loadData="loadUsers"
       ></user-cards>
-    </div>
-    <q-separator class="q-my-md" />
-    <records-footer
-      :itemsPerPage="itemsPerPage"
-      :currentPage="currentPage"
-      :totalItems="totalItems"
-      @update:itemsPerPage="updateItemsPerPage"
-    ></records-footer>
-    <pagination-component
-      v-if="totalPages"
-      :currentPage="currentPage"
-      :totalPages="totalPages"
-      @update:currentPage="updateCurrentPage"
-    ></pagination-component>
-
+    </records-list>
     <add-user-dialog
       :showDialog="showAddDialog"
       @update:showDialog="updateShowAddDialog"
@@ -54,13 +45,11 @@
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { api } from "src/boot/axios";
-import PaginationComponent from "../../components/common/PaginationComponent.vue";
-import RecordsFooter from "src/components/common/RecordsFooter.vue";
 import UserCards from "../../components/users/UserCards.vue";
 import AddUserDialog from "src/components/users/AddUserDialog.vue";
-import SearchBar from "src/components/common/SearchBar.vue";
 import AddNewButton from "src/components/common/AddNewButton.vue";
 import { useQuasar } from "quasar";
+import RecordsList from "src/components/common/wrappers/RecordsList.vue";
 
 const store = useStore();
 const $q = useQuasar();
