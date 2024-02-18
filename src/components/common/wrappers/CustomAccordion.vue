@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md row items-start q-gutter-md">
+  <div class="q-py-md row items-start">
     <q-list bordered class="rounded-borders full-width">
       <q-expansion-item
         expand-separator

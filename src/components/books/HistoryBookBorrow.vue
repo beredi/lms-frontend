@@ -1,5 +1,5 @@
 <template>
-  <div class="row q-gutter-sm history-borrow q-pa-md">
+  <div class="row q-gutter-md history-borrow q-pa-md">
     <div class="col-md-3 col-sm-5 col-xs-11">
       <q-card class="my-card text-body2">
         <q-card-section>
