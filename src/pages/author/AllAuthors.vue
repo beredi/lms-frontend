@@ -8,19 +8,24 @@
         @click="updateShowAddDialog(true)"
       ></add-new-button>
     </div>
-    <author-list
-      :authors="authors"
+    <records-list
       :search="search"
       :itemsPerPage="itemsPerPage"
       :currentPage="currentPage"
       :totalItems="totalItems"
       :totalPages="totalPages"
-      @editAuthorId="getEditAuthor"
+      :searchLabel="$t('searchAuthor')"
+      @updateCurrentPage="updateCurrentPage"
+      @updateItemsPerPage="updateItemsPerPage"
       @updateSearch="updateSearch"
       @loadData="loadData"
-      @update:itemsPerPage="updateItemsPerPage"
-      @updateCurrentPage="updateCurrentPage"
-    ></author-list>
+    >
+      <author-cards
+        :authors="authors"
+        @editAuthorId="getEditAuthor"
+        @loadData="loadData"
+      ></author-cards>
+    </records-list>
     <author-dialog
       v-if="checkPermission('create')"
       :showDialog="showAddDialog"
@@ -44,9 +49,10 @@ import { useStore } from "vuex";
 import { api } from "src/boot/axios";
 import AddNewButton from "src/components/common/AddNewButton.vue";
 import { useQuasar } from "quasar";
-import AuthorList from "src/components/authors/AuthorList.vue";
 import { check } from "src/components/authors/author";
 import AuthorDialog from "src/components/authors/AuthorDialog.vue";
+import RecordsList from "src/components/common/wrappers/RecordsList.vue";
+import AuthorCards from "src/components/authors/AuthorCards.vue";
 
 const store = useStore();
 const $q = useQuasar();

@@ -9,19 +9,25 @@
       ></add-new-button>
     </div>
 
-    <book-list
-      :books="books"
+    <records-list
       :search="search"
       :itemsPerPage="itemsPerPage"
       :currentPage="currentPage"
       :totalItems="totalItems"
       :totalPages="totalPages"
-      @editBookId="getEditBook"
+      :searchLabel="$t('searchBook')"
+      @updateCurrentPage="updateCurrentPage"
+      @updateItemsPerPage="updateItemsPerPage"
       @updateSearch="updateSearch"
       @loadData="loadData"
-      @update:itemsPerPage="updateItemsPerPage"
-      @updateCurrentPage="updateCurrentPage"
-    ></book-list>
+    >
+      <book-cards
+        v-if="books"
+        :books="books"
+        @editBookId="getEditBook"
+        @loadData="loadData"
+      ></book-cards>
+    </records-list>
     <book-dialog
       v-if="checkPermission('create')"
       :showDialog="showAddDialog"
@@ -46,10 +52,11 @@ import { useStore } from "vuex";
 import { api } from "src/boot/axios";
 import AddNewButton from "src/components/common/AddNewButton.vue";
 import { useQuasar } from "quasar";
-import BookList from "src/components/books/BookList.vue";
 import { check as checkBookPermission } from "src/components/books/book";
 import { computed } from "vue";
 import BookDialog from "src/components/books/BookDialog.vue";
+import BookCards from "src/components/books/BookCards.vue";
+import RecordsList from "src/components/common/wrappers/RecordsList.vue";
 
 const store = useStore();
 const $q = useQuasar();

@@ -24,19 +24,26 @@
         /></q-btn>
       </div>
     </div>
-    <book-list
-      :books="books"
+
+    <records-list
       :search="search"
       :itemsPerPage="itemsPerPage"
       :currentPage="currentPage"
       :totalItems="totalItems"
       :totalPages="totalPages"
-      @editBookId="getEditBook"
+      :searchLabel="$t('searchBook')"
+      @updateCurrentPage="updateCurrentPage"
+      @updateItemsPerPage="updateItemsPerPage"
       @updateSearch="updateSearch"
       @loadData="loadData"
-      @update:itemsPerPage="updateItemsPerPage"
-      @updateCurrentPage="updateCurrentPage"
-    ></book-list>
+    >
+      <book-cards
+        v-if="books"
+        :books="books"
+        @editBookId="getEditBook"
+        @loadData="loadData"
+      ></book-cards>
+    </records-list>
 
     <category-dialog
       v-if="checkPermission('edit') && category"
@@ -71,7 +78,8 @@ import { useStore } from "vuex";
 import { onMounted, ref, watch } from "vue";
 import { api } from "src/boot/axios";
 import { useRoute } from "vue-router";
-import BookList from "src/components/books/BookList.vue";
+import BookCards from "src/components/books/BookCards.vue";
+import RecordsList from "src/components/common/wrappers/RecordsList.vue";
 import { useQuasar } from "quasar";
 import { check } from "src/components/categories/category";
 import { check as checkBookPermission } from "src/components/books/book";

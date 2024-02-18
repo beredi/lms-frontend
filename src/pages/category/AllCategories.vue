@@ -8,19 +8,25 @@
         @click="updateShowAddDialog(true)"
       ></add-new-button>
     </div>
-    <category-list
-      :categories="categories"
+    <records-list
       :search="search"
       :itemsPerPage="itemsPerPage"
       :currentPage="currentPage"
       :totalItems="totalItems"
       :totalPages="totalPages"
-      @editCategoryId="getEditCategory"
+      :searchLabel="$t('searchCategory')"
+      @updateCurrentPage="updateCurrentPage"
+      @updateItemsPerPage="updateItemsPerPage"
       @updateSearch="updateSearch"
       @loadData="loadData"
-      @update:itemsPerPage="updateItemsPerPage"
-      @updateCurrentPage="updateCurrentPage"
-    ></category-list>
+    >
+      <category-cards
+        v-if="categories"
+        :categories="categories"
+        @editCategoryId="getEditCategory"
+        @loadData="loadData"
+      ></category-cards>
+    </records-list>
     <category-dialog
       v-if="checkPermission('create')"
       :showDialog="showAddDialog"
@@ -44,9 +50,10 @@ import { useStore } from "vuex";
 import { api } from "src/boot/axios";
 import AddNewButton from "src/components/common/AddNewButton.vue";
 import { useQuasar } from "quasar";
-import CategoryList from "src/components/categories/CategoryList.vue";
 import { check } from "src/components/categories/category";
 import CategoryDialog from "src/components/categories/CategoryDialog.vue";
+import RecordsList from "src/components/common/wrappers/RecordsList.vue";
+import CategoryCards from "src/components/categories/CategoryCards.vue";
 
 const store = useStore();
 const $q = useQuasar();
