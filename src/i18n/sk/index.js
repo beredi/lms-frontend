@@ -77,4 +77,7 @@ export default {
   searchCategory: "Vyhľadaj kategóriu",
   confirmDeleteBook: "Ste si istý, že chcete vymazať knihu",
   description: "Popis",
+  historyOfBorrow: "História vypožičania",
+  borrowed: "Vypožičané",
+  returned: "Vrátené",
 };

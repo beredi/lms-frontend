@@ -69,46 +69,16 @@
       <span class="text-bold q-mr-xs">{{ $t("description") }}: </span>
       <span>{{ book?.description }}</span>
     </div>
-    <div>
-      <h6 class="text-bold text-blue-grey-10">{{ $t("borrowedBooks") }}</h6>
-      <div class="q-pa-md row items-start q-gutter-md">
-        <q-card class="my-card">
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-        </q-card>
-        <q-card class="my-card">
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-        </q-card>
-        <q-card class="my-card">
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-        </q-card>
-        <q-card class="my-card">
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-        </q-card>
-        <q-card class="my-card">
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-        </q-card>
-        <q-card class="my-card">
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-        </q-card>
-        <q-card class="my-card">
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
+    <custom-accordion
+      :label="$t('borrowed')"
+      :expanded="true"
+      :icon="'lock_person'"
+    >
+      <history-book-borrow></history-book-borrow>
+    </custom-accordion>
+    <custom-accordion :label="$t('historyOfBorrow')" :icon="'history'">
+      <history-book-borrow></history-book-borrow>
+    </custom-accordion>
   </q-page>
 </template>
 <script setup>
@@ -120,6 +90,8 @@ import { useRouter } from "vue-router";
 import { computed } from "vue";
 import { check } from "src/components/books/book";
 import { RouterLink } from "vue-router";
+import CustomAccordion from "src/components/common/wrappers/CustomAccordion.vue";
+import HistoryBookBorrow from "src/components/books/HistoryBookBorrow.vue";
 
 const { id } = defineProps(["id"]);
 const store = useStore();
@@ -128,10 +100,6 @@ const $q = useQuasar();
 const router = useRouter();
 
 const authUser = computed(() => store.state.auth.authUser);
-
-const lorem = ref(
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-);
 
 const formatDate = (customDate) => {
   return date.formatDate(customDate, "DD. MM. YYYY");
@@ -172,9 +140,3 @@ onMounted(() => {
   loadData();
 });
 </script>
-<style lang="scss" scoped>
-.my-card {
-  width: 100%;
-  max-width: 250px;
-}
-</style>
