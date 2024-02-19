@@ -5,9 +5,7 @@
     @update:search="(val) => emits('updateSearch', val)"
     @loadData="emits('loadData')"
   ></search-bar>
-  <div class="q-pa-md row items-start q-gutter-md">
-    <slot></slot>
-  </div>
+  <slot></slot>
   <q-separator class="q-my-md" />
   <records-footer
     :itemsPerPage="props.itemsPerPage"

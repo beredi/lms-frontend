@@ -1,3 +1,4 @@
+import { useI18n } from "vue-i18n";
 export const createNewBook = ({
   book_id,
   title,
@@ -100,4 +101,27 @@ export const arraysAreEqual = (arr1, arr2) => {
   );
 
   return arr1Ids.every((id) => arr2Ids.includes(id));
+};
+
+export const getBackgroundColorClass = (status) => {
+  switch (status) {
+    case "Reserved":
+      return "bg-grey-7";
+    case "Borrowed":
+      return "bg-red-5";
+    default:
+      return "bg-positive";
+  }
+};
+
+export const getBookStatus = (status) => {
+  const { t } = useI18n();
+  switch (status) {
+    case "Reserved":
+      return t("reserved");
+    case "Borrowed":
+      return t("borrowed");
+    default:
+      return t("available");
+  }
 };

@@ -1,52 +1,54 @@
 <template>
-  <q-card
-    class="col-md-3 col-xs-12 col-lg-2 column justify-between card"
-    v-for="user in users"
-    :key="user.id"
-  >
-    <q-card-section>
-      <p class="text-bold q-pa-none">
-        <q-badge :color="badgeColor(user.roles)">
-          {{ user.id }} <q-tooltip>{{ user.roles[0] }}</q-tooltip></q-badge
+  <div class="q-pa-md row items-start q-gutter-md">
+    <q-card
+      class="col-md-3 col-xs-12 col-lg-2 column justify-between card"
+      v-for="user in users"
+      :key="user.id"
+    >
+      <q-card-section>
+        <p class="text-bold q-pa-none">
+          <q-badge :color="badgeColor(user.roles)">
+            {{ user.id }} <q-tooltip>{{ user.roles[0] }}</q-tooltip></q-badge
+          >
+          {{ user.name }} {{ user.lastname }}
+        </p>
+        <p class="q-pa-none q-ma-none text-blue-grey-7">
+          <span class="text-bold">Email: </span>
+          {{ user.email }}
+        </p>
+      </q-card-section>
+      <q-separator />
+      <q-card-section>
+        <p>
+          <span class="text-bold">{{ $t("borrowedBooks") }}: </span>0
+        </p>
+      </q-card-section>
+      <q-card-actions align="around">
+        <q-btn flat color="primary" :to="`/user/${user.id}`">
+          <q-icon name="visibility" />
+          <q-tooltip>{{ $t("show") }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          flat
+          color="accent"
+          v-if="check('edit', user)"
+          @click="emits('editUserId', user.id)"
         >
-        {{ user.name }} {{ user.lastname }}
-      </p>
-      <p class="q-pa-none q-ma-none text-blue-grey-7">
-        <span class="text-bold">Email: </span>
-        {{ user.email }}
-      </p>
-    </q-card-section>
-    <q-separator />
-    <q-card-section>
-      <p>
-        <span class="text-bold">{{ $t("borrowedBooks") }}: </span>0
-      </p>
-    </q-card-section>
-    <q-card-actions align="around">
-      <q-btn flat color="primary" :to="`/user/${user.id}`">
-        <q-icon name="visibility" />
-        <q-tooltip>{{ $t("show") }}</q-tooltip>
-      </q-btn>
-      <q-btn
-        flat
-        color="accent"
-        v-if="check('edit', user)"
-        @click="emits('editUserId', user.id)"
-      >
-        <q-icon name="edit" />
-        <q-tooltip>{{ $t("edit") }}</q-tooltip>
-      </q-btn>
-      <q-btn
-        flat
-        color="negative"
-        v-if="check('delete', user)"
-        @click="updateShowDeleteDialog(user)"
-      >
-        <q-icon name="delete_forever" />
-        <q-tooltip>{{ $t("delete") }}</q-tooltip>
-      </q-btn>
-    </q-card-actions>
-  </q-card>
+          <q-icon name="edit" />
+          <q-tooltip>{{ $t("edit") }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          flat
+          color="negative"
+          v-if="check('delete', user)"
+          @click="updateShowDeleteDialog(user)"
+        >
+          <q-icon name="delete_forever" />
+          <q-tooltip>{{ $t("delete") }}</q-tooltip>
+        </q-btn>
+      </q-card-actions>
+    </q-card>
+  </div>
   <delete-user-dialog
     :deleteUser="deleteUser"
     :showDialog="showDeleteDialog"

@@ -1,5 +1,8 @@
 <template>
-  <template v-if="props.authors && props.authors.length > 0">
+  <div
+    class="q-pa-md row items-start q-gutter-md"
+    v-if="props.authors && props.authors.length > 0"
+  >
     <q-card
       class="col-lg-3 col-md-3 col-xs-12 column justify-between card"
       v-for="author in props.authors"
@@ -52,7 +55,7 @@
       @update:showDialog="updateShowDialog"
       @loadData="emits('loadData')"
     ></delete-author-dialog>
-  </template>
+  </div>
   <div v-else>{{ $t("noData") }}</div>
 </template>
 <script setup>

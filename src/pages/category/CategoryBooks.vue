@@ -40,8 +40,10 @@
       <book-cards
         v-if="books"
         :books="books"
+        :showAvailable="showAvailable"
         @editBookId="getEditBook"
         @loadData="loadData"
+        @update:showAvailable="updateShowAvailable"
       ></book-cards>
     </records-list>
 
@@ -98,6 +100,7 @@ const totalItems = ref();
 const totalPages = ref();
 const itemsPerPage = ref(10);
 const currentPage = ref(1);
+const showAvailable = ref(false);
 
 const store = useStore();
 const route = useRoute();
@@ -107,6 +110,10 @@ const showDeleteDialog = ref(false);
 const authUser = computed(() => store.state.auth.authUser);
 const editBook = ref(null);
 const showEditBookDialog = ref(false);
+
+const updateShowAvailable = (value) => {
+  showAvailable.value = value;
+};
 
 const updateShowBookEditDialog = (value, book) => {
   if (book) {
@@ -149,6 +156,7 @@ const loadData = async () => {
   }
   let params = `per_page=${itemsPerPage.value}&page=${currentPage.value}`;
   if (search.value) params += `&search=${search.value}`;
+  if (showAvailable.value) params += `&available=1`;
 
   api
     .get(`/books/category/${props.categoryId}?${params}`)
@@ -211,7 +219,7 @@ const closeDialog = () => {
   }
 };
 
-watch([currentPage, itemsPerPage], () => {
+watch([currentPage, itemsPerPage, showAvailable], () => {
   loadData();
 });
 

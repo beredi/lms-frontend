@@ -4,9 +4,12 @@
       <div class="q-ml-sm">
         <div class="row text-blue-grey-10 items-center justify-between">
           <div class="row items-center q-ma-none">
-            <q-badge color="blue">
+            <q-badge
+              :class="getBackgroundColorClass(book?.status)"
+              class="q-px-md"
+            >
               <span class="text-h5">{{ book?.book_id }}</span>
-              <q-tooltip>{{ $t("bookId") }}</q-tooltip>
+              <q-tooltip>{{ getBookStatus(book?.status) }}</q-tooltip>
             </q-badge>
             <h5 class="q-ml-md q-my-sm">{{ book?.title }}</h5>
           </div>
@@ -92,7 +95,11 @@ import { useStore } from "vuex";
 import { useQuasar, date } from "quasar";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
-import { check } from "src/components/books/book";
+import {
+  check,
+  getBackgroundColorClass,
+  getBookStatus,
+} from "src/components/books/book";
 import { RouterLink } from "vue-router";
 import CustomAccordion from "src/components/common/wrappers/CustomAccordion.vue";
 import HistoryBookBorrow from "src/components/books/HistoryBookBorrow.vue";

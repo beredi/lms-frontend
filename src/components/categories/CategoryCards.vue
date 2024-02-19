@@ -1,5 +1,8 @@
 <template>
-  <template v-if="props.categories && props.categories.length > 0">
+  <div
+    class="q-pa-md row items-start q-gutter-md"
+    v-if="props.categories && props.categories.length > 0"
+  >
     <q-card
       class="col-md-4 col-xs-12 col-lg-3 column justify-between card"
       v-for="category in props.categories"
@@ -53,7 +56,7 @@
       @update:showDialog="updateShowDialog"
       @loadData="emits('loadData')"
     ></delete-category-dialog>
-  </template>
+  </div>
   <div v-else>{{ $t("noData") }}</div>
 </template>
 <script setup>

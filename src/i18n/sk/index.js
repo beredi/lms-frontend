@@ -79,5 +79,8 @@ export default {
   description: "Popis",
   historyOfBorrow: "História vypožičania",
   borrowed: "Vypožičané",
+  reserved: "Rezervované",
+  available: "Dostupné",
   returned: "Vrátené",
+  showAvailable: "Zobraziť iba dostupné",
 };

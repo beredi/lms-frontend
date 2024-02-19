@@ -1,5 +1,12 @@
 <template>
-  <template v-if="props.books && props.books.length > 0">
+  <custom-books-filter
+    :showAvailable="props.showAvailable"
+    @update:showAvailable="updateShowAvailable"
+  ></custom-books-filter>
+  <div
+    class="q-pa-md row items-start q-gutter-md"
+    v-if="props.books && props.books.length > 0"
+  >
     <q-card
       class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 column justify-between card"
       v-for="book in props.books"
@@ -28,9 +35,9 @@
         </div>
         <div class="col-xs-3">
           <router-link :to="`/book/${book.id}`" class="text-white no-underline">
-            <div class="bookId">
+            <div class="bookId" :class="getBackgroundColorClass(book.status)">
               {{ book.book_id }}
-              <q-tooltip>{{ $t("bookId") }}</q-tooltip>
+              <q-tooltip>{{ getBookStatus(book.status) }}</q-tooltip>
             </div>
           </router-link>
         </div>
@@ -79,7 +86,7 @@
         </q-btn>
       </q-card-actions>
     </q-card>
-  </template>
+  </div>
   <div v-else>{{ $t("noData") }}</div>
   <delete-book-dialog
     v-if="checkPermission('delete')"
@@ -93,13 +100,15 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import BookInfo from "./BookInfo.vue";
-import { check } from "./book";
+import { check, getBackgroundColorClass, getBookStatus } from "./book";
 import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import DeleteBookDialog from "./DeleteBookDialog.vue";
+import CustomBooksFilter from "./CustomBooksFilter.vue";
 
-const props = defineProps(["books"]);
-const emits = defineEmits(["editBookId", "loadData"]);
+
+const props = defineProps(["books", "showAvailable"]);
+const emits = defineEmits(["editBookId", "loadData", "update:showAvailable"]);
 
 const deleteBook = ref(null);
 const showDeleteDialog = ref(false);
@@ -120,6 +129,9 @@ const updateShowDeleteDialog = (value, book = null) => {
   }
   showDeleteDialog.value = value;
 };
+const updateShowAvailable = (value) => {
+  emits("update:showAvailable", value);
+};
 const onCloseDeleteDialog = () => {
   deleteBook.value = null;
 };
@@ -133,7 +145,6 @@ const onCloseDeleteDialog = () => {
 .bookId {
   display: block;
   border-radius: 20%;
-  background-color: $primary;
   padding: 5px;
   text-align: center;
   font-size: 130%;
