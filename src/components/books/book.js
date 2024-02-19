@@ -10,18 +10,23 @@ export const createNewBook = ({
   const authorsIds = authors.map((author) => {
     return author.value;
   });
-  const categoriesIds = categories.map((category) => {
-    return category.value;
-  });
-  return {
+
+  const newBook = {
     book_id,
     title,
     pages,
     year,
     description,
     authors: authorsIds,
-    categories: categoriesIds,
   };
+
+  if (categories) {
+    const categoriesIds = categories.map((category) => {
+      return category.value;
+    });
+    newBook["categories"] = categoriesIds;
+  }
+  return newBook;
 };
 
 export const updateBook = (

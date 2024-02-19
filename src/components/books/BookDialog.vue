@@ -67,13 +67,12 @@
             use-chips
             input-debounce="0"
             :options="filteredCategoriesOptions"
-            :label="$t('categories') + '*'"
+            :label="$t('categories')"
             lazy-rules
             color="blue-grey-8"
             label-color="blue-2"
             @filter="filterCategories"
             @new-value="createCategory"
-            :rules="requiredRules"
           >
             <template v-slot:no-option>
               <q-item>

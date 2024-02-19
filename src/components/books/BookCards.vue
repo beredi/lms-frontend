@@ -27,11 +27,8 @@
           </div>
         </div>
         <div class="col-xs-3">
-          <router-link
-            :to="`/book/${book.id}`"
-            class="text-white no-underline"
-          >
-            <div class="text-h5 bookId">
+          <router-link :to="`/book/${book.id}`" class="text-white no-underline">
+            <div class="bookId">
               {{ book.book_id }}
               <q-tooltip>{{ $t("bookId") }}</q-tooltip>
             </div>
@@ -48,7 +45,7 @@
           :key="category.id"
           :to="`/category/${category.id}`"
         >
-          <q-badge color="purple text-body2">
+          <q-badge color="purple text-body2 q-mb-xs">
             {{ category.name }}
           </q-badge>
         </router-link>
@@ -137,8 +134,9 @@ const onCloseDeleteDialog = () => {
   display: block;
   border-radius: 20%;
   background-color: $primary;
-  padding: 10px;
+  padding: 5px;
   text-align: center;
+  font-size: 130%;
 }
 
 .bookInfo {
