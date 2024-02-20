@@ -11,13 +11,10 @@
     <q-scroll-area class="fit" v-if="authUser">
       <user-info :user="authUser"></user-info>
       <q-separator spaced />
-      <menu-items
-        :items="userMenuItems(authUser.id)"
-        :isDark="true"
-      ></menu-items>
+      <menu-items :items="userMenuItems(authUser)" :isDark="true"></menu-items>
       <template v-if="canViewEmployerItems">
         <q-separator spaced />
-        <menu-items :items="employerMenuItems" :isDark="true"></menu-items>
+        <menu-items :items="employerMenuItems()" :isDark="true"></menu-items>
       </template>
       <q-separator class="q-mt-xl" />
       <q-item class="text-white" clickable @click="onLogout">

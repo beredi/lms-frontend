@@ -14,7 +14,7 @@
       <q-item-section avatar>
         <q-icon :name="item.icon" />
       </q-item-section>
-      <q-item-section>{{ $t(item.label) }}</q-item-section>
+      <q-item-section>{{ item.label }}</q-item-section>
     </q-item>
     <q-item-label
       v-else-if="item.type === 'heading'"
@@ -22,8 +22,16 @@
       class="q-py-sm q-px-md text-grey-4"
     >
       <q-icon :name="item.icon" class="q-pr-md" />
-      {{ $t(item.label) }}
+      {{ item.label }}
     </q-item-label>
+    <q-item
+      v-else-if="item.type === 'info'"
+      :key="index + 'info'"
+      class="q-py-sm text-grey-4 text-right justify-end"
+    >
+      <q-icon :name="item.icon" size="sm" class="q-mr-sm" />
+      {{ item.label }}
+    </q-item>
     <q-expansion-item
       v-else-if="item.type === 'expansion'"
       :key="index + 'expansion'"
@@ -43,7 +51,7 @@
           />
         </q-item-section>
 
-        <q-item-section> {{ $t(item.label) }} </q-item-section>
+        <q-item-section> {{ item.label }} </q-item-section>
       </template>
       <template v-if="item.children">
         <q-item
@@ -61,10 +69,7 @@
           <q-item-section avatar v-if="child.icon" class="q-ma-none avatar">
             <q-icon :name="child.icon" size="sm" />
           </q-item-section>
-          <q-item-section v-if="child.type === 'category'">
-            {{ child.label }}
-          </q-item-section>
-          <q-item-section v-else>{{ $t(child.label) }}</q-item-section>
+          <q-item-section>{{ child.label }}</q-item-section>
         </q-item></template
       >
     </q-expansion-item>

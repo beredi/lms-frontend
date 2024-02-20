@@ -13,7 +13,7 @@
             </q-badge>
             <h5 class="q-ml-md q-my-sm">{{ book?.title }}</h5>
           </div>
-          <div class="q-gutter-sm">
+          <div class="q-gutter-sm q-px-sm">
             <q-btn
               color="accent"
               v-if="checkPermission('edit')"
@@ -74,17 +74,48 @@
           <span class="text-bold q-mr-xs">{{ $t("description") }}: </span>
           <span>{{ book?.description }}</span>
         </div>
+        <div
+          v-if="isPrivileged() && book?.status === 'Reserved'"
+          class="row text-blue-grey-8 items-center"
+        >
+          <span class="text-bold q-mr-xs">{{ $t("reserved") }}: </span>
+          <router-link
+            class="text-primary text-body2 q-px-xs"
+            :to="`/user/${borrow?.user?.id}`"
+          >
+            {{ borrow?.user?.name }} {{ borrow?.user?.lastname }}
+          </router-link>
+          -
+          {{ formatDate(borrow?.reserved) }}
+        </div>
+        <div
+          v-if="isPrivileged() && book?.status === 'Borrowed'"
+          class="row text-blue-grey-8"
+        >
+          <span class="text-bold q-mr-xs">{{ $t("borrowed") }}: </span>
+          <router-link
+            class="text-primary text-body2 q-px-xs"
+            :to="`/user/${borrow?.user?.id}`"
+          >
+            {{ borrow?.user?.name }} {{ borrow?.user?.lastname }}
+          </router-link>
+          -
+          {{ formatDate(borrow?.borrowed) }}
+        </div>
       </div>
     </div>
+
     <custom-accordion
-      :label="$t('borrowed')"
-      :expanded="true"
-      :icon="'lock_person'"
+      v-if="isPrivileged()"
+      :label="$t('historyOfBorrow')"
+      :icon="'history'"
+      :expanded="showHistoryExpanded"
+      @onShow="setShowHistoryExpanded(true)"
     >
-      <history-book-borrow></history-book-borrow>
-    </custom-accordion>
-    <custom-accordion :label="$t('historyOfBorrow')" :icon="'history'">
-      <history-book-borrow></history-book-borrow>
+      <history-book-borrow
+        v-if="book && showHistoryExpanded"
+        :book="book"
+      ></history-book-borrow>
     </custom-accordion>
   </q-page>
 </template>
@@ -104,11 +135,17 @@ import { RouterLink } from "vue-router";
 import CustomAccordion from "src/components/common/wrappers/CustomAccordion.vue";
 import HistoryBookBorrow from "src/components/books/HistoryBookBorrow.vue";
 
-const { id } = defineProps(["id"]);
+const props = defineProps(["id"]);
 const store = useStore();
 const book = ref(null);
 const $q = useQuasar();
 const router = useRouter();
+const borrow = ref(null);
+const showHistoryExpanded = ref(false);
+
+const setShowHistoryExpanded = (value) => {
+  showHistoryExpanded.value = value;
+};
 
 const authUser = computed(() => store.state.auth.authUser);
 
@@ -116,13 +153,37 @@ const formatDate = (customDate) => {
   return date.formatDate(customDate, "DD. MM. YYYY");
 };
 
+const getBorrowsByBook = async () => {
+  if (book?.value?.status) {
+    const result = await api.get(
+      `/books/borrows-by-book/${props.id}?status=${book.value.status.toLowerCase()}`,
+    );
+    const { data } = result.data.data;
+    borrow.value = data[0];
+  }
+};
+
+const isPrivileged = () => {
+  if (authUser.value && Object.keys(authUser.value).length > 0) {
+    return (
+      authUser.value.roles.includes("admin") ||
+      authUser.value.roles.includes("employer")
+    );
+  }
+
+  return false;
+};
+
 const loadData = async () => {
   store.dispatch("common/setIsLoading", true);
   api
-    .get(`/books/${id}`)
+    .get(`/books/${props.id}`)
     .then((response) => {
       const { book: loadedBook } = response.data.data;
       book.value = loadedBook;
+      if (isPrivileged() && loadedBook.status !== "Available") {
+        getBorrowsByBook();
+      }
     })
     .catch((error) => {
       const { status, data } = error.response;

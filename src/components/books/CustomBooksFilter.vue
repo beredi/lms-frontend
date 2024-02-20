@@ -1,6 +1,10 @@
 <template>
   <div class="row q-mt-md">
-    <q-checkbox v-model="available" :label="$t('showAvailable')" />
+    <q-checkbox
+      v-model="available"
+      :label="$t('showAvailable')"
+      color="positive"
+    />
   </div>
 </template>
 

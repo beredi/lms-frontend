@@ -1,5 +1,6 @@
 <template>
   <custom-books-filter
+    v-if="checkAvailableProp()"
     :showAvailable="props.showAvailable"
     @update:showAvailable="updateShowAvailable"
   ></custom-books-filter>
@@ -59,7 +60,49 @@
       </q-card-section>
       <q-separator />
       <book-info :book="book"></book-info>
+      <q-card-actions align="around" v-if="authUserActions()">
+        <q-btn
+          flat
+          color="blue-grey-6"
+          size="xl"
+          v-if="canReserveBook(book)"
+          @click="updateShowReserveDialog(true, book)"
+        >
+          <q-icon name="bookmark_added" />
+          <q-tooltip>{{ $t("reserve") }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          flat
+          color="blue-grey-6"
+          size="xl"
+          v-if="canBorrowBook(book)"
+          @click="updateShowBorrowDialog(true, book)"
+        >
+          <q-icon name="check_circle" />
+          <q-tooltip>{{ $t("borrow") }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          flat
+          color="blue-grey-6"
+          size="xl"
+          v-if="canReturnBook(book)"
+          @click="doBookAction('return', book)"
+        >
+          <q-icon name="keyboard_return" />
+          <q-tooltip>{{ $t("return") }}</q-tooltip>
+        </q-btn>
+      </q-card-actions>
       <q-card-actions align="around">
+        <q-btn
+          v-if="canReserveBook(book, true)"
+          flat
+          color="blue-grey-6"
+          size="xl"
+          @click="reserveForMe(book.id)"
+        >
+          <q-icon name="bookmark_added" />
+          <q-tooltip>{{ $t("reserve") }}</q-tooltip>
+        </q-btn>
         <q-btn flat color="primary" size="xl" :to="`/book/${book.id}`">
           <q-icon name="visibility" />
           <q-tooltip>{{ $t("show") }}</q-tooltip>
@@ -96,6 +139,23 @@
     @update:showDialog="updateShowDeleteDialog"
     @loadData="emits('loadData')"
   ></delete-book-dialog>
+
+  <borrow-book-dialog
+    v-if="reserveBook"
+    :book="reserveBook"
+    :showDialog="showReserveDialog"
+    :reservation="true"
+    @update:showDialog="updateShowReserveDialog"
+    @loadData="emits('loadData')"
+  ></borrow-book-dialog>
+
+  <borrow-book-dialog
+    v-if="borrowBook"
+    :book="borrowBook"
+    :showDialog="showBorrowDialog"
+    @update:showDialog="updateShowBorrowDialog"
+    @loadData="emits('loadData')"
+  ></borrow-book-dialog>
 </template>
 <script setup>
 import { RouterLink } from "vue-router";
@@ -105,17 +165,99 @@ import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import DeleteBookDialog from "./DeleteBookDialog.vue";
 import CustomBooksFilter from "./CustomBooksFilter.vue";
-
+import { api } from "src/boot/axios";
+import { useQuasar } from "quasar";
+import BorrowBookDialog from "../borrows/BorrowBookDialog.vue";
 
 const props = defineProps(["books", "showAvailable"]);
 const emits = defineEmits(["editBookId", "loadData", "update:showAvailable"]);
 
 const deleteBook = ref(null);
 const showDeleteDialog = ref(false);
+const showReserveDialog = ref(false);
+const showBorrowDialog = ref(false);
+const reserveBook = ref(null);
+const borrowBook = ref(null);
 
 const store = useStore();
+const $q = useQuasar();
 
 const authUser = computed(() => store.state.auth.authUser);
+
+const isUser = () => {
+  if (authUser.value && Object.keys(authUser.value).length > 0) {
+    return authUser.value.roles.includes("user");
+  }
+  return false;
+};
+
+const updateShowReserveDialog = (value, book = null) => {
+  if (book) {
+    reserveBook.value = book;
+  } else {
+    reserveBook.value = null;
+  }
+  showReserveDialog.value = value;
+};
+
+const canReturnBook = (book) => {
+  return book.status === "Borrowed";
+};
+
+const updateShowBorrowDialog = (value, book = null) => {
+  borrowBook.value = book;
+  if (book && book.status === "Reserved") {
+    doBookAction("borrow", book);
+  } else {
+    showBorrowDialog.value = value;
+  }
+};
+
+const doBookAction = async (action, book) => {
+  store.dispatch("common/setIsLoading", true);
+  const status = action === "borrow" ? "reserved" : "borrowed";
+  const result = await api.get(
+    `/books/borrows-by-book/${book.id}?status=${status}`,
+  );
+  const { data } = result.data.data;
+  api
+    .post(`/books/${action}`, data[0].ids)
+    .then((response) => {
+      const { message } = response.data;
+      $q.notify({
+        icon: "done",
+        color: "positive",
+        message: message,
+      });
+      if (data[0].ids.user_id === authUser.value.id) {
+        store.dispatch("auth/loadAuthUser");
+      }
+      emits("loadData");
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => {
+      store.dispatch("common/setIsLoading", false);
+    });
+};
+
+const canReserveBook = (book, forUser = false) => {
+  const isAvailable = book.status === "Available";
+  return forUser ? isAvailable && isUser() : isAvailable;
+};
+
+const canBorrowBook = (book) => {
+  return book.status === "Available" || book.status === "Reserved";
+};
+
+const authUserActions = () => {
+  const checkIsUser = isUser();
+
+  return (
+    authUser.value && Object.keys(authUser.value).length > 0 && !checkIsUser
+  );
+};
 
 const checkPermission = (action) => {
   if (authUser.value && Object.keys(authUser.value).length > 0) {
@@ -123,6 +265,11 @@ const checkPermission = (action) => {
   }
   return false;
 };
+
+const checkAvailableProp = () => {
+  return typeof props.showAvailable !== "undefined";
+};
+
 const updateShowDeleteDialog = (value, book = null) => {
   if (book) {
     deleteBook.value = book;
@@ -134,6 +281,33 @@ const updateShowAvailable = (value) => {
 };
 const onCloseDeleteDialog = () => {
   deleteBook.value = null;
+};
+
+const reserveForMe = (id) => {
+  store.dispatch("common/setIsLoading", true);
+  api
+    .post("/books/reserve", { book_id: id, user_id: authUser.value.id })
+    .then((respone) => {
+      const { message } = respone.data;
+      $q.notify({
+        icon: "done",
+        color: "positive",
+        message: message,
+      });
+      emits("loadData");
+      store.dispatch("auth/loadAuthUser");
+    })
+    .catch((error) => {
+      const { message } = error.response.data;
+      $q.notify({
+        icon: "error",
+        color: "negative",
+        message: message,
+      });
+    })
+    .finally(() => {
+      store.dispatch("common/setIsLoading", false);
+    });
 };
 </script>
 

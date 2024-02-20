@@ -16,17 +16,19 @@
 </template>
 
 <script setup>
-import { publicMenuItems, employerMenuItems } from "./menu";
+import { publicMenuItems } from "./menu";
 import { computed } from "vue";
 import { useStore } from "vuex";
 import MenuItems from "./MenuItems.vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps(["leftDrawerOpen"]);
 const emits = defineEmits(["update:leftDrawerOpen"]);
 const store = useStore();
+const { t } = useI18n();
 
 const categories = computed(() => store.state.common.categories);
-const menuItems = computed(() => publicMenuItems(categories.value));
+const menuItems = computed(() => publicMenuItems(categories.value, t));
 
 const drawerOpen = computed({
   get() {

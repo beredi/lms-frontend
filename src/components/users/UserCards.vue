@@ -20,7 +20,12 @@
       <q-separator />
       <q-card-section>
         <p>
-          <span class="text-bold">{{ $t("borrowedBooks") }}: </span>0
+          <span class="text-bold">{{ $t("reservedBooks") }}: </span
+          >{{ user.reserved_books_count }}
+        </p>
+        <p>
+          <span class="text-bold">{{ $t("borrowedBooks") }}: </span
+          >{{ user.borrowed_books_count }}
         </p>
       </q-card-section>
       <q-card-actions align="around">

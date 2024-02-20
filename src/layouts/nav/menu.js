@@ -1,4 +1,5 @@
-export const publicMenuItems = (categories) => {
+import { useI18n } from "vue-i18n";
+export const publicMenuItems = (categories, t) => {
   const categoryItems = categories
     ? categories.map((category) => ({
         label: category.name,
@@ -10,13 +11,13 @@ export const publicMenuItems = (categories) => {
 
   return [
     {
-      label: "allBooks",
+      label: t("allBooks"),
       icon: "menu_book",
       route: "/",
       type: "item",
     },
     {
-      label: "authors",
+      label: t("authors"),
       icon: "edit_note",
       route: "/authors",
       type: "item",
@@ -25,7 +26,7 @@ export const publicMenuItems = (categories) => {
       type: "separator",
     },
     {
-      label: "categoriesTitle",
+      label: t("categoriesTitle"),
       icon: "category",
       type: "expansion",
       children: [...categoryItems],
@@ -33,38 +34,59 @@ export const publicMenuItems = (categories) => {
   ];
 };
 
-export const userMenuItems = (id) => [
-  {
-    label: "profile",
-    route: `/user/${id}`,
-    icon: "person",
-  },
-];
+export const userMenuItems = (user) => {
+  const { t } = useI18n();
+  return [
+    {
+      label: t("profile"),
+      route: `/user/${user.id}`,
+      icon: "person",
+    },
+    {
+      label: t("reserved") + ` (${user.reserved_books_count})`,
+      type: "info",
+      icon: "bookmark_added",
+    },
+    {
+      label: t("borrowed") + ` (${user.borrowed_books_count})`,
+      type: "info",
+      icon: "beenhere",
+    },
+    {
+      label: t("historyOfBorrow"),
+      route: `/user/history/${user.id}`,
+      icon: "history",
+    },
+  ];
+};
 
-export const employerMenuItems = [
-  {
-    label: "config",
-    type: "heading",
-    icon: "settings",
-  },
-  {
-    label: "manageCategories",
-    route: "/categories",
-    icon: "style",
-  },
-  {
-    type: "separator",
-  },
-  {
-    label: "manageUsers",
-    type: "heading",
-    icon: "group",
-  },
-  {
-    label: "allUsers",
-    route: "/users",
-    icon: "people",
-  },
-];
+export const employerMenuItems = () => {
+  const { t } = useI18n();
+  return [
+    {
+      label: t("config"),
+      type: "heading",
+      icon: "settings",
+    },
+    {
+      label: t("manageCategories"),
+      route: "/categories",
+      icon: "style",
+    },
+    {
+      type: "separator",
+    },
+    {
+      label: t("manageUsers"),
+      type: "heading",
+      icon: "group",
+    },
+    {
+      label: t("allUsers"),
+      route: "/users",
+      icon: "people",
+    },
+  ];
+};
 
 export const adminMenuItems = [];

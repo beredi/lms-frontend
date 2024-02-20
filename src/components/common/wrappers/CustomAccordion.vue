@@ -7,6 +7,7 @@
         :label="props.label"
         :caption="props.desc"
         :default-opened="props.expanded"
+        @before-show="emits('onShow')"
         header-class="text-white text-body-2 bg-primary"
         expand-icon-class="text-grey-1"
       >
@@ -18,4 +19,5 @@
 
 <script setup>
 const props = defineProps(["label", "desc", "expanded", "icon"]);
+const emits = defineEmits(["onShow"]);
 </script>

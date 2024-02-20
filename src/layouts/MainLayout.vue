@@ -20,7 +20,13 @@
         ></user-actions>
       </q-toolbar>
     </q-header>
-
+    <q-footer elevated>
+      <q-toolbar>
+        <q-toolbar-title class="text-overline text-center"
+          >Developed by: Jaroslav Beredi | All rights reserved</q-toolbar-title
+        >
+      </q-toolbar>
+    </q-footer>
     <navigation-menu
       :leftDrawerOpen="leftDrawerOpen"
       @update:leftDrawerOpen="updateLeftDrawerOpen"

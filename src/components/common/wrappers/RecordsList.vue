@@ -1,5 +1,6 @@
 <template>
   <search-bar
+    v-if="checkSearchProp()"
     :search="props.search"
     :label="props.searchLabel"
     @update:search="(val) => emits('updateSearch', val)"
@@ -41,4 +42,8 @@ const emits = defineEmits([
   "updateSearch",
   "loadData",
 ]);
+
+const checkSearchProp = () => {
+  return typeof props.search !== "undefined";
+};
 </script>
