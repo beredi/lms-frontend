@@ -22,6 +22,7 @@ export default {
   noResults: "Žiadne data",
   searchRecord: "Vyhľadaj záznam",
   status: "Stav",
+  downloadExcel: "Stiahnúť .xlsx",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",

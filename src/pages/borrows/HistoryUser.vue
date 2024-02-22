@@ -4,6 +4,16 @@
       <h5 class="q-py-sm q-ma-none">
         {{ $t("historyOfBorrow") }}: {{ user?.name }} {{ user?.lastname }}
       </h5>
+
+      <q-btn dense flat>
+        <q-icon
+          name="file_download"
+          size="xl"
+          color="positive"
+          @click="exportBorrows"
+        />
+        <q-tooltip>{{ $t("downloadExcel") }}</q-tooltip>
+      </q-btn>
     </div>
 
     <records-list
@@ -104,6 +114,31 @@ const updateItemsPerPage = (value) => {
 
 const updateCurrentPage = (value) => {
   currentPage.value = value;
+};
+
+const exportBorrows = async () => {
+  store.dispatch("common/setIsLoading", true);
+
+  api
+    .get(`/users/export-borrows/${props.userId}`, {
+      responseType: "blob",
+    })
+    .then((response) => {
+      const blob = new Blob([response.data], {
+        type: "application/octet-stream",
+      });
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "borrows.xlsx";
+
+      link.click();
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => {
+      store.dispatch("common/setIsLoading", false);
+    });
 };
 
 watch([currentPage, itemsPerPage], () => {
