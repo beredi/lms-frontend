@@ -24,7 +24,7 @@
             /></q-btn>
             <q-btn
               color="negative"
-              @click="updateShowDialog(true)"
+              @click="updateShowDeleteDialog(true)"
               v-if="checkPermission('delete')"
             >
               <q-tooltip>{{ $t("delete") }}</q-tooltip>
@@ -61,6 +61,14 @@
               {{ category.name }}
             </q-badge>
           </router-link>
+        </div>
+        <div class="row text-blue-grey-8 items-center">
+          <span class="text-bold q-mr-xs"> {{ $t("status") }}: </span>
+          <span
+            :class="getBackgroundColorClass(book?.status)"
+            class="rounded-borders q-pa-xs text-white"
+            >{{ getBookStatus(book?.status) }}</span
+          >
         </div>
         <div class="row text-blue-grey-8">
           <span class="text-bold q-mr-xs">{{ $t("bookYear") }}: </span>
@@ -117,6 +125,24 @@
         :book="book"
       ></history-book-borrow>
     </custom-accordion>
+    <book-dialog
+      v-if="checkPermission('edit') && book"
+      :book="book"
+      :showDialog="showEditDialog"
+      @update:showDialog="updateShowEditDialog"
+      @loadData="loadData"
+      @closeDialog="updateShowEditDialog(false)"
+    ></book-dialog>
+
+    <delete-book-dialog
+      v-if="checkPermission('delete')"
+      :deleteBook="book"
+      :showDialog="showDeleteDialog"
+      :redirect="true"
+      @closeDialog="updateShowDeleteDialog(false)"
+      @update:showDialog="updateShowDeleteDialog"
+      @loadData="loadData"
+    ></delete-book-dialog>
   </q-page>
 </template>
 <script setup>
@@ -134,6 +160,8 @@ import {
 import { RouterLink } from "vue-router";
 import CustomAccordion from "src/components/common/wrappers/CustomAccordion.vue";
 import HistoryBookBorrow from "src/components/books/HistoryBookBorrow.vue";
+import BookDialog from "src/components/books/BookDialog.vue";
+import DeleteBookDialog from "src/components/books/DeleteBookDialog.vue";
 
 const props = defineProps(["id"]);
 const store = useStore();
@@ -143,8 +171,19 @@ const router = useRouter();
 const borrow = ref(null);
 const showHistoryExpanded = ref(false);
 
+const showEditDialog = ref(false);
+const showDeleteDialog = ref(false);
+
+const updateShowEditDialog = (value) => {
+  showEditDialog.value = value;
+};
+
 const setShowHistoryExpanded = (value) => {
   showHistoryExpanded.value = value;
+};
+
+const updateShowDeleteDialog = (value) => {
+  showDeleteDialog.value = value;
 };
 
 const authUser = computed(() => store.state.auth.authUser);

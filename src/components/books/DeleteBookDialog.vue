@@ -50,7 +50,7 @@ const deleteBook = async () => {
         message: message,
       });
       if (props.redirect) {
-        router.push("/books");
+        router.push("/");
       } else {
         emits("loadData");
         emits("update:showDialog", false);

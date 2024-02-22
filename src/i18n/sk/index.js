@@ -21,6 +21,7 @@ export default {
   titleName: "Názov",
   noResults: "Žiadne data",
   searchRecord: "Vyhľadaj záznam",
+  status: "Stav",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
