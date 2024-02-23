@@ -76,7 +76,6 @@ const formatDate = (customDate) => {
 
 const loadData = () => {
   store.dispatch("common/setIsLoading", true);
-  console.log(pagination.value);
   let params = `per_page=${pagination.value.rowsPerPage}&page=${pagination.value.page}`;
 
   api
