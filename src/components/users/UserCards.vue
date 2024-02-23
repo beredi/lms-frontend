@@ -1,12 +1,14 @@
 <template>
   <div class="q-pa-md row items-start q-gutter-md">
     <q-card
-      class="col-md-3 col-xs-12 col-lg-2 column justify-between card"
+      class="col-md-3 col-xs-12 col-lg-3 column justify-between card"
       v-for="user in users"
       :key="user.id"
     >
       <q-card-section>
-        <div class="row text-bold q-px-none q-pb-md justify-between full-width">
+        <div
+          class="row text-bold q-px-none q-pb-md justify-between full-width items-center"
+        >
           <div>
             <router-link
               :to="`user/${user.id}`"
