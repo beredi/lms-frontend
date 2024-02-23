@@ -84,6 +84,13 @@ export const canDelete = (authUser, user) => {
   return result;
 };
 
+export const canPay = (authUser) => {
+  return (
+    authUser.roles.includes("admin") ||
+    authUser.permissions.includes("CREATE_PAYMENT")
+  );
+};
+
 export const badgeColor = (roles) => {
   let color = "primary";
   if (roles) {

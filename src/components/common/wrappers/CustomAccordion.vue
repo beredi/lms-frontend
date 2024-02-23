@@ -8,7 +8,7 @@
         :caption="props.desc"
         :default-opened="props.expanded"
         @before-show="emits('onShow')"
-        header-class="text-white text-body-2 bg-primary"
+        :header-class="`text-white text-body-2 bg-${props.color ?? 'primary'}`"
         expand-icon-class="text-grey-1"
       >
         <slot></slot>
@@ -18,6 +18,6 @@
 </template>
 
 <script setup>
-const props = defineProps(["label", "desc", "expanded", "icon"]);
+const props = defineProps(["label", "desc", "expanded", "icon", "color"]);
 const emits = defineEmits(["onShow"]);
 </script>

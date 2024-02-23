@@ -6,12 +6,29 @@
       :key="user.id"
     >
       <q-card-section>
-        <p class="text-bold q-pa-none">
-          <q-badge :color="badgeColor(user.roles)">
-            {{ user.id }} <q-tooltip>{{ user.roles[0] }}</q-tooltip></q-badge
+        <div class="row text-bold q-px-none q-pb-md justify-between full-width">
+          <div>
+            <router-link
+              :to="`user/${user.id}`"
+              class="text-blue-grey-10 no-underline"
+            >
+              <q-badge :color="badgeColor(user.roles)">
+                <span class="text-body2">{{ user.id }}</span>
+                <q-tooltip>{{ $t(user.roles[0]) }}</q-tooltip>
+              </q-badge>
+              {{ user.name }} {{ user.lastname }}
+            </router-link>
+          </div>
+          <q-icon
+            name="euro_symbol"
+            color="white"
+            :class="`rounded-borders q-pa-xs bg-${user.paid ? 'positive' : 'negative'}`"
           >
-          {{ user.name }} {{ user.lastname }}
-        </p>
+            <q-tooltip>{{
+              user.paid ? $t("paidForYear") : $t("didntPayForYear")
+            }}</q-tooltip>
+          </q-icon>
+        </div>
         <p class="q-pa-none q-ma-none text-blue-grey-7">
           <span class="text-bold">Email: </span>
           {{ user.email }}
@@ -68,6 +85,7 @@ import { useStore } from "vuex";
 import { ref } from "vue";
 import { canDelete, canEdit, badgeColor } from "./user";
 import DeleteUserDialog from "./DeleteUserDialog.vue";
+import { RouterLink } from "vue-router";
 
 const { users } = defineProps(["users"]);
 const emits = defineEmits(["editUserId", "loadData"]);
@@ -109,5 +127,8 @@ const updateShowDialog = (value) => {
 <style lang="scss" scoped>
 .card {
   min-height: 250px;
+}
+.no-underline {
+  text-decoration: none;
 }
 </style>

@@ -2,7 +2,12 @@
   <q-page class="q-px-lg">
     <div class="row q-py-md text-blue-grey-8 items-center justify-between">
       <h5 class="q-py-sm q-ma-none">
-        {{ $t("historyOfBorrow") }}: {{ user?.name }} {{ user?.lastname }}
+        {{ $t("user") }}:
+        <router-link
+          class="text-blue-grey-10 no-underline"
+          :to="`/user/${user?.id}`"
+          >{{ user?.name }} {{ user?.lastname }}</router-link
+        >
       </h5>
 
       <q-btn dense flat>
@@ -40,7 +45,7 @@ import { useStore } from "vuex";
 import { api } from "src/boot/axios";
 import { computed } from "vue";
 import RecordsList from "src/components/common/wrappers/RecordsList.vue";
-import { useRoute } from "vue-router";
+import { useRoute, RouterLink } from "vue-router";
 import BorrowCards from "src/components/borrows/BorrowCards.vue";
 
 const props = defineProps(["userId"]);

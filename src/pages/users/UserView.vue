@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-px-lg">
-    <div class="row text-blue-grey-8 items-center justify-between">
+    <div class="row text-blue-grey-8 items-center justify-between q-py-sm">
       <div class="row items-center q-py-sm q-ma-none">
         <q-badge :color="badgeColor(user?.roles)">
           <span class="text-h5">{{ user?.id }}</span>
@@ -15,8 +15,16 @@
           :to="`/user/history/${user?.id}`"
         >
           <q-tooltip>{{ $t("historyOfBorrow") }}</q-tooltip>
-          <q-icon name="history"
-        /></q-btn>
+          <q-icon name="history" />
+        </q-btn>
+        <q-btn
+          color="positive"
+          v-if="check('pay')"
+          @click="updatePayDialog(true)"
+        >
+          <q-tooltip>{{ $t("payMembership") }}</q-tooltip>
+          <q-icon name="euro_symbol" />
+        </q-btn>
         <q-btn
           color="warning"
           v-if="check('edit')"
@@ -42,6 +50,12 @@
           <q-icon name="delete_forever"
         /></q-btn>
       </div>
+    </div>
+    <div class="row text-blue-grey-8" v-if="check('edit')">
+      <span
+        :class="`text-bold q-pa-xs rounded-borders bg-${user?.paid ? 'positive' : 'negative'} text-white`"
+        >{{ user?.paid ? $t("paidForYear") : $t("didntPayForYear") }}</span
+      >
     </div>
     <div class="row text-blue-grey-8">
       <span class="text-bold q-mr-xs">Email: </span>
@@ -86,6 +100,18 @@
           @loadData="loadData(true)"
         ></borrow-cards
       ></custom-accordion>
+      <custom-accordion
+        :label="$t('historyOfPay')"
+        :expanded="expandedBorrowed"
+        :icon="'wallet'"
+        :color="'positive'"
+      >
+        <payment-cards
+          :user-id="props.id"
+          :shouldLoadPay="shouldLoadPay"
+          @update:shouldLoadPay="updateShouldLoadPay"
+        ></payment-cards>
+      </custom-accordion>
     </template>
     <delete-user-dialog
       v-if="props.id"
@@ -111,8 +137,14 @@
       :showDialog="showPasswordDialog"
       @update:showDialog="updatePasswordDialog"
     >
-      ></change-password
-    >
+    </change-password>
+    <pay-dialog
+      v-if="check('pay') && user"
+      :user="user"
+      :showDialog="showPayDialog"
+      @update:showDialog="updatePayDialog"
+      @loadData="loadPayDialogData"
+    ></pay-dialog>
   </q-page>
 </template>
 <script setup>
@@ -122,7 +154,7 @@ import { useStore } from "vuex";
 import { useQuasar, date } from "quasar";
 import { useRouter, useRoute } from "vue-router";
 import DeleteUserDialog from "src/components/users/DeleteUserDialog.vue";
-import { canEdit, canDelete } from "src/components/users/user";
+import { canEdit, canDelete, canPay } from "src/components/users/user";
 import { check as checkBorrow } from "src/components/borrows/borrow";
 import { computed } from "vue";
 import AddUserDialog from "src/components/users/AddUserDialog.vue";
@@ -130,6 +162,8 @@ import ChangePassword from "src/components/users/ChangePassword.vue";
 import { badgeColor } from "../../components/users/user";
 import BorrowCards from "src/components/borrows/BorrowCards.vue";
 import CustomAccordion from "src/components/common/wrappers/CustomAccordion.vue";
+import PaymentCards from "src/components/payments/PaymentCards.vue";
+import PayDialog from "src/components/payments/PayDialog.vue";
 
 const props = defineProps(["id"]);
 const store = useStore();
@@ -140,8 +174,11 @@ const router = useRouter();
 const confirm = ref(false);
 const showEditDialog = ref(false);
 const showPasswordDialog = ref(false);
+const showPayDialog = ref(false);
 const borrowedBooks = ref(null);
 const reservedBooks = ref(null);
+
+const shouldLoadPay = ref(false);
 
 const expandedBorrowed = ref(false);
 const expandedReserved = ref(false);
@@ -150,6 +187,10 @@ const onShowReserved = () => {
   if (reservedBooks.value == null) {
     loadBooks("reserved", true);
   }
+};
+
+const updateShouldLoadPay = (value) => {
+  shouldLoadPay.value = value;
 };
 
 const onShowBorrowed = () => {
@@ -162,6 +203,11 @@ const authUser = computed(() => store.state.auth.authUser);
 
 const formatDate = (customDate) => {
   return date.formatDate(customDate, "DD. MM. YYYY");
+};
+
+const loadPayDialogData = () => {
+  updateShouldLoadPay(true);
+  loadData();
 };
 
 const loadBooks = async (status, skip = false) => {
@@ -237,6 +283,10 @@ const updateShowDialog = (value) => {
   confirm.value = value;
 };
 
+const updatePayDialog = (value) => {
+  showPayDialog.value = value;
+};
+
 const check = (action) => {
   if (authUser.value && Object.keys(authUser.value).length > 0 && user.value) {
     switch (action) {
@@ -244,6 +294,8 @@ const check = (action) => {
         return canEdit(authUser.value, user.value);
       case "delete":
         return canDelete(authUser.value, user.value);
+      case "pay":
+        return canPay(authUser.value);
       default:
         return false;
     }
