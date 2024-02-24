@@ -1,11 +1,11 @@
 <template>
   <div class="q-pa-md row items-start q-gutter-md">
     <q-card
-      class="col-md-3 col-xs-12 col-lg-3 column justify-between card"
+      class="col-md-4 col-xs-12 col-lg-3 column justify-between card"
       v-for="user in users"
       :key="user.id"
     >
-      <q-card-section>
+      <q-card-section class="fit">
         <div
           class="row text-bold q-px-none q-pb-md justify-between full-width items-center"
         >
