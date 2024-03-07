@@ -31,6 +31,21 @@ export const publicMenuItems = (categories, t) => {
       type: "expansion",
       children: [...categoryItems],
     },
+    {
+      type: "separator",
+    },
+    {
+      label: t("about"),
+      icon: "info",
+      route: "/about",
+      type: "item",
+    },
+    {
+      label: t("contact"),
+      icon: "contact_support",
+      route: "/contact",
+      type: "item",
+    },
   ];
 };
 

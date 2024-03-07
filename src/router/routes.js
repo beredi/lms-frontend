@@ -58,6 +58,8 @@ const routes = [
         props: true,
         component: () => import("pages/author/AuthorBooks.vue"),
       },
+      { path: "/about", component: () => import("pages/AboutPage.vue") },
+      { path: "/contact", component: () => import("pages/ContactPage.vue") },
     ],
   },
 

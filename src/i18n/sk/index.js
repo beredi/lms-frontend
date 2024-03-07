@@ -23,6 +23,8 @@ export default {
   searchRecord: "Vyhľadaj záznam",
   status: "Stav",
   downloadExcel: "Stiahnúť .xlsx",
+  contact: "Kontakt",
+  about: "O knižnici",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -112,4 +114,5 @@ export default {
   didntPayForYear: "Používateľ nemá za tento rok zaplatené",
   pay: "Zaplatiť",
   paymentDate: "Zaplatené dňa",
+  //About
 };
