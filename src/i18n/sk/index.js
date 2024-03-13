@@ -25,6 +25,9 @@ export default {
   downloadExcel: "Stiahnúť .xlsx",
   contact: "Kontakt",
   about: "O knižnici",
+  export: "Export",
+  from: "Od",
+  to: "Do",
   //Toolbar
   appTitle: "Systém riadenia knižnice",
   login: "Prihlásiť sa",
@@ -93,6 +96,7 @@ export default {
   available: "Dostupné",
   returned: "Vrátené",
   showAvailable: "Zobraziť iba dostupné",
+  onlyAvailable: "Iba dostupné",
   return: "Vrátiť",
   borrow: "Vypožičať",
   borrowBook: "Vypožičať knihu",
@@ -114,5 +118,8 @@ export default {
   didntPayForYear: "Používateľ nemá za tento rok zaplatené",
   pay: "Zaplatiť",
   paymentDate: "Zaplatené dňa",
+  exportBooks: "Vyexportovať knihy",
+  chooseExportParameters: "Zvoľte si parametre pre export",
+  exportAllBooks: "Vyexportovať všetky knihy",
   //About
 };

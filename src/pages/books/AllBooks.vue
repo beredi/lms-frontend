@@ -7,6 +7,15 @@
         :label="$t('addBook')"
         @click="updateShowAddDialog(true)"
       ></add-new-button>
+      <q-btn dense flat v-if="checkPermission('edit') && books">
+        <q-icon
+          name="file_download"
+          size="xl"
+          color="positive"
+          @click="updateShowExportDialog(true)"
+        />
+        <q-tooltip>{{ $t("downloadExcel") }}</q-tooltip>
+      </q-btn>
     </div>
 
     <records-list
@@ -45,6 +54,13 @@
       @loadData="loadData"
       @closeDialog="closeDialog"
     ></book-dialog>
+    <export-books-dialog
+      v-if="checkPermission('edit') && books"
+      :showDialog="showExportDialog"
+      :minYear="yearRange ? yearRange.min : 0"
+      :maxYear="yearRange ? yearRange.max : 100"
+      @update:showDialog="updateShowExportDialog"
+    ></export-books-dialog>
   </q-page>
 </template>
 
@@ -57,6 +73,7 @@ import { useQuasar } from "quasar";
 import { check as checkBookPermission } from "src/components/books/book";
 import { computed } from "vue";
 import BookDialog from "src/components/books/BookDialog.vue";
+import ExportBooksDialog from "src/components/books/ExportBooksDialog.vue";
 import BookCards from "src/components/books/BookCards.vue";
 import RecordsList from "src/components/common/wrappers/RecordsList.vue";
 
@@ -71,9 +88,11 @@ const currentPage = ref(1);
 const showAvailable = ref(false);
 
 const books = ref(null);
+const yearRange = ref(null);
 const authUser = computed(() => store.state.auth.authUser);
 const showAddDialog = ref(false);
 const showEditDialog = ref(false);
+const showExportDialog = ref(false);
 const editBook = ref(null);
 
 const updateShowAddDialog = (value) => {
@@ -84,6 +103,10 @@ const updateShowEditDialog = (value, book) => {
     editBook.value = book;
   }
   showEditDialog.value = value;
+};
+
+const updateShowExportDialog = (value) => {
+  showExportDialog.value = value;
 };
 
 const closeDialog = () => {
@@ -109,11 +132,15 @@ const loadData = async () => {
     .then((response) => {
       const {
         data: loadedBooks,
-        meta: { total, last_page },
+        meta: { total, last_page, lowestYearOfBooks, highestYearOfBooks },
       } = response.data.data;
       books.value = loadedBooks;
       totalItems.value = total;
       totalPages.value = last_page;
+      yearRange.value = {
+        min: lowestYearOfBooks,
+        max: highestYearOfBooks,
+      };
     })
     .catch((error) => {
       const { status, data } = error.response;
